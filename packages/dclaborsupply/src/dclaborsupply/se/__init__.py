@@ -1,4 +1,4 @@
-"""Standard errors: cluster-robust sandwich + T1-T5 checks (lifted Wave 2.1)."""
+"""Standard errors: cluster-robust sandwich (Wave 2.1) + Hessian SEs (Wave 2.2)."""
 
 from dclaborsupply.se.cluster_robust import (
     assemble_meat_matrix,
@@ -9,6 +9,10 @@ from dclaborsupply.se.cluster_robust import (
     run_t4_se_positivity_check,
     run_t5_vs_hessian_check,
 )
+from dclaborsupply.se.numerical import (
+    compute_standard_errors,
+    compute_hessian_se,
+)
 
 __all__ = [
     "assemble_meat_matrix",
@@ -18,4 +22,6 @@ __all__ = [
     "run_t3_cluster_count_check",
     "run_t4_se_positivity_check",
     "run_t5_vs_hessian_check",
+    "compute_standard_errors",
+    "compute_hessian_se",
 ]
