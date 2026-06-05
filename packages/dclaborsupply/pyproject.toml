@@ -17,6 +17,10 @@ dependencies = [
 [project.optional-dependencies]
 jax = ["jax", "optax"]
 gamspy = ["gamspy"]
+# SciPy L-BFGS-B optimizer (solvers/jax_optimize.py). Needs jax too: the objective
+# is the JAX joint negLL with jax.grad jacobian -> install dclaborsupply[jax,solver].
+# optimistix is a further-optional pure-JAX polish (not listed; pip install separately).
+solver = ["scipy"]
 dev = ["pytest", "ruff"]
 
 [project.scripts]
