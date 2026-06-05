@@ -1,3 +1,5 @@
+import pytest
+
 from dclaborsupply import EstimationSpec
 from dclaborsupply.config.loader import load_yaml
 
@@ -40,6 +42,17 @@ def test_from_yaml_full_parse(tmp_path) -> None:
         "beta_l0_m", "beta_l0_f",
         "beta_c",
     }
+
+
+def test_from_yaml_incomplete_spec_raises(tmp_path) -> None:
+    # The full parser must REJECT an incomplete spec (no initial_values), not
+    # silently accept it the way the v0.1 raw-dict stub would have. This guards
+    # the full-parse contract surfaced by from_yaml.
+    config = tmp_path / "incomplete.yaml"
+    config.write_text("specification:\n  name: tiny\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Missing initial values"):
+        EstimationSpec.from_yaml(config)
 
 
 def test_load_yaml(tmp_path) -> None:
