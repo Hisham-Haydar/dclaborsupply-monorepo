@@ -27,7 +27,7 @@
 
 This repository implements a **Random Utility Random Opportunity (RURO)** discrete-choice labour supply model for France (SILC/EUROMOD, 2015–2017), estimated by maximum likelihood with importance-sampling correction. Two active estimation branches exist: continuous RURO (`scripts/enhanced/`) and job-choice RURO (`scripts/Job_model/`). An archived translog/Box-Cox RUM approach (`scripts/archive/rum_approach/`) predates RURO and must not be migrated.
 
-**Certified baseline:** 47-param spec `scripts/bpool/specs/estimation_spec_joint_pooled_v1_bll0_tlmpin.yaml` — negLL 238 362.79, Hessian min\_eig +1.706. Script: `scripts/bpool/step4_realdata_baseline.py`. NEVER move or edit.
+**Certified baseline:** 47-param spec `scripts/bpool/specs/estimation_spec_joint_pooled_v1_bll0_tlmpin.yaml` — negLL 238 504.636097, Hessian min\_eig +1.706. Script: `scripts/bpool/step4_realdata_baseline.py`. NEVER move or edit. (NB: 238 362.79 is the 49-param **gsplit** negLL — a different, non-certified spec — not this 47-param baseline; corrected per Wave 1.2 provenance check.)
 
 **49-param gsplit** (`scripts/bpool/specs/estimation_spec_joint_pooled_v1_bll0_tlmpin_gsplit.yaml`): FAILED synthetic recovery gate (tight-SE bias; beta\_h\_pt2\_m err/SE = 19). NOT the paper baseline.
 
@@ -92,7 +92,7 @@ Columns: **Current path** (from repo root) · **Lines** · **Purpose** · **Clas
 | Current path | Lines | Purpose | Class | Target | Priority | Risk | Notes |
 |---|---|---|---|---|---|---|---|
 | `scripts/bpool/jax_recovery_gate.py` | 560 | Synthetic recovery certification (Checks 1–6) | `tests_or_gates` | `stays_in_jmp_repo` | never | high | ⚠ PROVENANCE GATE — NEVER MOVE; basis of all identification claims |
-| `scripts/bpool/step4_realdata_baseline.py` | 678 | Certified paper baseline run: negLL 238 362.79, min\_eig +1.706 | `output_or_provenance` | `stays_in_jmp_repo` | never | high | ⚠ PROVENANCE ARTIFACT — NEVER MOVE OR EDIT |
+| `scripts/bpool/step4_realdata_baseline.py` | 678 | Certified paper baseline run: negLL 238 504.636097, min\_eig +1.706 (238 362.79 = 49-param gsplit, not this baseline) | `output_or_provenance` | `stays_in_jmp_repo` | never | high | ⚠ PROVENANCE ARTIFACT — NEVER MOVE OR EDIT |
 | `scripts/bpool/step4_lr_pooling_test.py` | 298 | LR test: beta\_E + beta\_h\_pt2 pooling rejection | `tests_or_gates` | `stays_in_jmp_repo` | never | high | ⚠ FREEZE; establishes pooling rejection; not safely re-runnable without full data |
 | `scripts/bpool/step4_emit_results_json.py` | 336 | Export certified results to per-group JSON | `output_or_provenance` | `stays_in_jmp_repo` | low | low | Run once after certified baseline |
 | `scripts/bpool/jax_ll_probe.py` | 614 | JAX likelihood builders for singles/couples | `reusable_core_candidate` | `core_package` | high | medium | Cross-checks NumPy engine; confirmed R1 Box-Cox bug |
