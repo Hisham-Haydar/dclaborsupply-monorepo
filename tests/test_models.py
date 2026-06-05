@@ -155,6 +155,30 @@ def test_json_roundtrip():
     assert r2.se("hessian") == {"a": 0.1, "b": 0.2}   # cached SE survives round-trip
 
 
+# --- predict() + summary() (Result-API completeness) -------------------------
+def test_predict_precomputed_and_summary(tmp_path):
+    pytest.importorskip("jax")  # test_models sorts after test_imports -> safe in-process
+    spec = _spec(tmp_path)
+    sm, sf = _synth_singles(1, True), _synth_singles(2, False)
+    r = RUMModel.from_spec(spec).fit((sm, sf, None), compute_se=False)
+
+    # predict on precomputed data -> finite negLL at the fitted theta
+    pred = r.predict((sm, sf, None))
+    assert "neg_ll" in pred and np.isfinite(pred["neg_ll"])
+
+    # raw-dataframe-like input is rejected (df->PrecomputedData deferred)
+    class _FakeDF:
+        def to_parquet(self, *a, **k):
+            pass
+    with pytest.raises(NotImplementedError):
+        r.predict(_FakeDF())
+
+    # summary() is a small dict (not printed text)
+    s = r.summary()
+    assert s["model"] == "RUM" and s["n_free"] == 8
+    assert set(s["blocks"]) == {"preference", "hours", "wage", "market", "occupation"}
+
+
 # --- (f) light import ---------------------------------------------------------
 def test_models_import_is_light():
     code = (
