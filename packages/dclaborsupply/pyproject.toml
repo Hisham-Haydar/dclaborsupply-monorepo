@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dclaborsupply"
+version = "0.1.0"
+description = "Skeleton core package for discrete-choice labour-supply models."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "numpy",
+  "pandas",
+  "pyyaml",
+]
+
+[project.optional-dependencies]
+jax = ["jax", "optax"]
+gamspy = ["gamspy"]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+dcls = "dclaborsupply.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

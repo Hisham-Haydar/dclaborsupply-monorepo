@@ -1,0 +1,2 @@
+"""Portable validation-gate placeholders."""
+

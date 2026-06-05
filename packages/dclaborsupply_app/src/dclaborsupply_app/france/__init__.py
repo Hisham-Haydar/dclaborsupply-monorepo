@@ -1,0 +1,2 @@
+"""France-specific application placeholders."""
+

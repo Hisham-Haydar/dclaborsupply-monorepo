@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dclaborsupply_app"
+version = "0.1.0"
+description = "Application-layer skeleton for dclaborsupply."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "dclaborsupply>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
