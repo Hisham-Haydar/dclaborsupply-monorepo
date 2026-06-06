@@ -26,6 +26,7 @@ from .draws_prep import (
     canonicalize_post_draws,
     assert_choice_state_consistent,
 )
+from .pricing import de_earnings_policy
 
 __all__ = [
     "DE_CONFIG",
@@ -39,4 +40,5 @@ __all__ = [
     "canonicalize_choice_state",
     "canonicalize_post_draws",
     "assert_choice_state_consistent",
+    "de_earnings_policy",
 ]
