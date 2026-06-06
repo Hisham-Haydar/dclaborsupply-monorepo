@@ -1,0 +1,251 @@
+# ==============================================================================
+# DE 2017 MINIMAL estimation spec  (Wave 5.4-B-lite, parser subgate)
+# ==============================================================================
+# Surgical adaptation of the certified FR spec
+#   scripts/bpool/specs/estimation_spec_joint_pooled_v1_bll0_tlmpin.yaml (47 free)
+# to a MINIMAL DE 2017 spec — by CONFIGURATION ALONE, no core edits.
+#
+# Adaptation log (vs the FR certified spec):
+#   - Utility: Box-Cox preserved. Structural normalisations preserved
+#     (beta_c FIXED 1.0; couples theta_c FIXED 0.0; singles share theta_c_singles).
+#     beta_ll OMITTED (no couples leisure_interaction block).
+#     theta_l_m FREED — the FR fixed_params pin (theta_l_m=-0.8) is REMOVED; its
+#     initial value and bound are restored. The FR pin was a FR-data artefact
+#     (beta_l0_m~0); it is not a structural DE assumption.
+#   - Hours: 5 bands kept (working / pt1 / pt2 / ft / lh) on the established
+#     bands PT1[18.5,20.5] PT2[29.5,30.5] FT[37.5,40.5] LH[44.5,70]. No DE "40h".
+#   - reporting.hours_bins REMOVED (reporting-only, not estimation).
+#   - Wage: log_normal kept, minimal shifters only — intercept, educL, educH, sigma.
+#     pexp_years / pexp_years2 DROPPED (not in the current DE processed schema).
+#   - Occupation: 6 gender-specific loc4 opportunity params kept (beta_occ_{2,3,4}_{m,f}).
+#     loc4_2 / loc4_3 / loc4_4 are deterministic one-hot columns (reference loc4==1)
+#     REQUIRED from the forthcoming draw / engine-ready assembly; they are NOT yet
+#     present in scratch/staging/de_2017 (only the single `loc4` column exists).
+#   - Market/year REMOVED entirely: gsur, reg2..8, drgur, drgmd, year indicators
+#     and all their initial values + bounds (DE region fields are constant 0).
+#     NOTE: occupation_opportunity is internally appended to the parser's
+#     market_opportunity_shifters list for engine evaluation — that is expected
+#     and is NOT a retained DE market/region parameter.
+#
+# Expected free parameters: 34
+#   preference 19 + hours 5 + occupation 6 + wage 4.
+# ==============================================================================
+
+specification:
+  name: "de_2017_minimal"
+  description: "Minimal DE 2017 spec (config-only adaptation of FR certified): utility+hours+wage+occupation; NO market/region/year; theta_l_m free; 34 free params."
+  wage_spec: "vw"
+  model_family: "regular"
+
+utility:
+  functional_form: "box_cox"
+
+  consumption:
+    coefficient: "beta_c"
+    # Scale numéraire: beta_c FIXED (not estimated). Structural normalisation kept.
+    fixed_value: 1.0
+    box_cox_exponent: "theta_c"
+    singles_box_cox_exponent: "theta_c_singles"
+    # Couples consumption Box-Cox FIXED at 0.0 (not estimated). Kept.
+    couples_fixed_box_cox_exponent: 0.0
+    box_cox_bounds: [-8.0, 0.95]
+
+  leisure:
+    intercept: "beta_l0"
+    box_cox_exponent: "theta_l"
+    box_cox_bounds: [-8.0, 0.95]
+    shifters:
+      - variable: "age_norm"
+        coefficient: "beta_l_age"
+      - variable: "age_norm2"
+        coefficient: "beta_l_age2"
+      - variable: "n_children"
+        coefficient: "beta_l_nkids"
+        gender_specific: true   # female only
+
+hours_opportunity:
+  shifters:
+    - variable: "working"
+      coefficient: "beta_E"
+    - variable: "working_pt1"
+      coefficient: "beta_h_pt1"
+    - variable: "working_pt2"
+      coefficient: "beta_h_pt2"
+    - variable: "working_ft"
+      coefficient: "beta_h_ft"
+    - variable: "working_lh"
+      coefficient: "beta_h_lh"   # long-hours [44.5,70]; F35 remains reference
+
+# reporting.hours_bins intentionally omitted from this minimal spec (reporting-only).
+
+wage_opportunity:
+  specification: "log_normal"
+  mean_shifters:
+    - variable: "intercept"
+      coefficient: "beta_w0"
+    - variable: "educL"
+      coefficient: "beta_w_educL"
+    - variable: "educH"
+      coefficient: "beta_w_educH"
+    # pexp_years / pexp_years2 dropped: not in current DE processed schema.
+  variance:
+    parameter: "sigma"
+
+# market_opportunity intentionally omitted (DE region/year fields constant 0).
+
+occupation_opportunity:
+  variable: "loc4"
+  reference: 1
+  # Six gender-specific loc4 opportunity params (pooled across marital status).
+  # loc4_2/3/4 = deterministic one-hot of loc4 (reference loc4==1), required from
+  # the forthcoming engine-ready assembly (NOT yet in the DE processed files).
+  shifters:
+    - variable: "loc4_2"
+      coefficient: "beta_occ_2_m"
+      applies_to: "male"
+      interaction: ["working"]
+    - variable: "loc4_3"
+      coefficient: "beta_occ_3_m"
+      applies_to: "male"
+      interaction: ["working"]
+    - variable: "loc4_4"
+      coefficient: "beta_occ_4_m"
+      applies_to: "male"
+      interaction: ["working"]
+    - variable: "loc4_2"
+      coefficient: "beta_occ_2_f"
+      applies_to: "female"
+      interaction: ["working"]
+    - variable: "loc4_3"
+      coefficient: "beta_occ_3_f"
+      applies_to: "female"
+      interaction: ["working"]
+    - variable: "loc4_4"
+      coefficient: "beta_occ_4_f"
+      applies_to: "female"
+      interaction: ["working"]
+
+# 34 free parameters:
+#   Singles male (4):   beta_l0_sm, beta_l_age_sm, beta_l_age2_sm, theta_l_sm
+#   Singles female (5): beta_l0_sf, beta_l_age_sf, beta_l_age2_sf, beta_l_nkids_sf, theta_l_sf
+#   Singles cons. (1):  theta_c_singles
+#   Couples male (4):   beta_l0_m, beta_l_age_m, beta_l_age2_m, theta_l_m  (theta_l_m FREE)
+#   Couples female (5): beta_l0_f, beta_l_age_f, beta_l_age2_f, beta_l_nkids_f, theta_l_f
+#   Hours (5):          beta_E, beta_h_pt1, beta_h_pt2, beta_h_ft, beta_h_lh
+#   Occupation (6):     beta_occ_{2,3,4}_{m,f}
+#   Wage (4):           beta_w0, beta_w_educL, beta_w_educH, sigma
+#   FIXED (not free):   beta_c=1.0, couples theta_c=0.0; beta_ll absent.
+
+initial_values:
+  beta_l0_sm: 1.0
+  beta_l_age_sm: 0.0
+  beta_l_age2_sm: 0.0
+  theta_l_sm: -1.0
+
+  beta_l0_sf: 1.0
+  beta_l_age_sf: 0.0
+  beta_l_age2_sf: 0.0
+  beta_l_nkids_sf: 0.0
+  theta_l_sf: -1.0
+
+  theta_c_singles: -1.0
+
+  beta_l0_m: 1.0
+  beta_l_age_m: 0.0
+  beta_l_age2_m: 0.0
+  theta_l_m: -1.0          # RESTORED (FR pin removed)
+
+  beta_l0_f: 1.0
+  beta_l_age_f: 0.0
+  beta_l_age2_f: 0.0
+  beta_l_nkids_f: 0.0
+  theta_l_f: -1.0
+
+  beta_E:     0.0
+  beta_h_pt1: 0.0
+  beta_h_pt2: 0.0
+  beta_h_ft:  0.0
+  beta_h_lh:  0.0
+
+  beta_occ_2_m: 0.0
+  beta_occ_3_m: 0.0
+  beta_occ_4_m: 0.0
+  beta_occ_2_f: 0.0
+  beta_occ_3_f: 0.0
+  beta_occ_4_f: 0.0
+
+  beta_w0:       2.0
+  beta_w_educL: -0.1
+  beta_w_educH:  0.2
+  sigma:         0.5
+
+optimization:
+  method: "L-BFGS-B"
+  analytical_gradient: true
+  max_iterations: 6000
+  tolerance: 1.0e-8
+  gradient_tolerance: 1.0e-6
+  disp: true
+  iprint: 1
+
+  bounds:
+    theta_l_sm: [-8.0, 0.95]
+    theta_l_sf: [-8.0, 0.95]
+    theta_l_m:  [-8.0, 0.95]   # RESTORED (FR pin removed)
+    theta_l_f:  [-8.0, 0.95]
+    theta_c_singles: [-8.0, 0.95]
+
+    beta_l0_sm: [0.05, 50.0]
+    beta_l0_sf: [0.05, 50.0]
+    beta_l0_m:  [0.05, 50.0]
+    beta_l0_f:  [0.05, 50.0]
+
+    beta_l_age_sm:   [-5.0, 5.0]
+    beta_l_age2_sm:  [-1.0, 1.0]
+    beta_l_age_sf:   [-5.0, 5.0]
+    beta_l_age2_sf:  [-1.0, 1.0]
+    beta_l_age_m:    [-5.0, 5.0]
+    beta_l_age2_m:   [-1.0, 1.0]
+    beta_l_age_f:    [-5.0, 5.0]
+    beta_l_age2_f:   [-1.0, 1.0]
+    beta_l_nkids_sf: [-5.0, 5.0]
+    beta_l_nkids_f:  [-5.0, 5.0]
+
+    beta_E:     [-25.0, 25.0]
+    beta_h_pt1: [-10.0, 10.0]
+    beta_h_pt2: [-10.0, 10.0]
+    beta_h_ft:  [-10.0, 10.0]
+    beta_h_lh:  [-10.0, 10.0]
+
+    beta_occ_2_m: [-15.0, 15.0]
+    beta_occ_3_m: [-15.0, 15.0]
+    beta_occ_4_m: [-15.0, 15.0]
+    beta_occ_2_f: [-15.0, 15.0]
+    beta_occ_3_f: [-15.0, 15.0]
+    beta_occ_4_f: [-15.0, 15.0]
+
+    beta_w0:       [-10.0, 20.0]
+    beta_w_educL:  [-5.0, 5.0]
+    beta_w_educH:  [-5.0, 5.0]
+    sigma:         [0.1, 20.0]
+
+  expression_constraints:
+    enabled: true
+    default_mode: soft
+    default_weight: 1000.0
+    constraints:
+      - name: mul_cou_m_positive
+        expression: mul
+        group: couples_male
+        at: {consumption: 1.0, leisure_male: 1.0, leisure_female: 1.0}
+        lower: 1.0e-6
+      - name: mul_cou_f_positive
+        expression: mul
+        group: couples_female
+        at: {consumption: 1.0, leisure_male: 1.0, leisure_female: 1.0}
+        lower: 1.0e-6
+
+gradient_verification:
+  enabled: false
+
+# NO fixed_params block — theta_l_m is FREE in this DE spec.
