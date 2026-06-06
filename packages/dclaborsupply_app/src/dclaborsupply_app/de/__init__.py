@@ -19,6 +19,13 @@ from .data_prep import (
     compute_is_worker,
     reshape_couples_to_wide,
 )
+from .draws_prep import (
+    COUPLES_GRID_NOTE,
+    POST_MANAGED_FIELDS,
+    canonicalize_choice_state,
+    canonicalize_post_draws,
+    assert_choice_state_consistent,
+)
 
 __all__ = [
     "DE_CONFIG",
@@ -27,4 +34,9 @@ __all__ = [
     "collapse_loc_to_loc4",
     "compute_is_worker",
     "reshape_couples_to_wide",
+    "COUPLES_GRID_NOTE",
+    "POST_MANAGED_FIELDS",
+    "canonicalize_choice_state",
+    "canonicalize_post_draws",
+    "assert_choice_state_consistent",
 ]
