@@ -21,6 +21,11 @@ gamspy = ["gamspy"]
 # is the JAX joint negLL with jax.grad jacobian -> install dclaborsupply[jax,solver].
 # optimistix is a further-optional pure-JAX polish (not listed; pip install separately).
 solver = ["scipy"]
+# Parquet-PATH loading in data/loader.py needs a pandas parquet engine. The DataFrame
+# APIs (load_singles/load_couples with a DataFrame) work with base numpy+pandas only;
+# reading a parquet path / load_engine_ready_stem requires this extra:
+#   pip install dclaborsupply[parquet]
+parquet = ["pyarrow"]
 dev = ["pytest", "ruff"]
 
 [project.scripts]
