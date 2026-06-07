@@ -258,6 +258,18 @@ def _resolve_spec(spec) -> EstimationSpec:
     return spec
 
 
+def _require_jax_fit_backend(backend: str) -> None:
+    """fit() only builds the JAX objective + L-BFGS-B; there is no NumPy optimizer here.
+    NumPy remains supported for likelihood EVALUATION via compute_index(..., backend='numpy')."""
+    if backend != "jax":
+        raise NotImplementedError(
+            f"fit() only supports backend='jax'; got {backend!r}. The front-end builds the JAX "
+            "objective and optimizes it with L-BFGS-B (jax.grad). NumPy is supported for "
+            "likelihood EVALUATION via compute_index(..., backend='numpy'), but no NumPy "
+            "optimizer is implemented in this front-end."
+        )
+
+
 def _make_result(spec, res: dict, objective, *, model: str, backend: str,
                  compute_se: bool) -> Result:
     theta = np.asarray(res["theta_hat"], dtype=float)
@@ -308,6 +320,7 @@ class RUMModel:
 
     def fit(self, data: Any, *, backend: str = "jax", warm_start: Any | None = None,
             compute_se: bool = True, gender_split=None, maxiter: int = 2000) -> Result:
+        _require_jax_fit_backend(backend)
         spec = _resolve_spec(self.spec)
         sm, sf, cou = _normalize_data(data)
         objective = _build_objective(spec, sm, sf, cou, use_actual_choice=False,
@@ -339,6 +352,7 @@ class RUROModel:
 
     def fit(self, data: Any, *, backend: str = "jax", warm_start: Any | None = None,
             compute_se: bool = True, gender_split=None, maxiter: int = 2000) -> Result:
+        _require_jax_fit_backend(backend)
         spec = _resolve_spec(self.spec)
         sm, sf, cou = _normalize_data(data)
         objective = _build_objective(spec, sm, sf, cou, use_actual_choice=False,

@@ -175,19 +175,24 @@ def build_jax_singles_ll(data, spec, is_male, use_actual_choice=False,
         coef_use = (coef + _gsuf_split) if coef in _gsplit else coef
         hours.append((coef_use, arr, use_working))
 
-    # wage mean shifters + sigma
+    # wage mean shifters + sigma (vw/loc_empirical only). For fixed wages (wage_spec=="fw")
+    # there is NO wage density: do not touch log_wage / wage shifters / wage_variance_param.
+    _wage_fixed = (getattr(spec, "wage_spec", "fw") == "fw")
     wage_terms = []
-    for sh in spec.wage_mean_shifters:
-        var = sh["variable"]
-        coef = sh["coefficient"]
-        if var == "intercept":
-            wage_terms.append((coef, None))
-        else:
-            arr = _arr(var)
-            if arr is not None:
-                wage_terms.append((coef, arr))
-    sigma_name = spec.wage_variance_param
-    log_wage = _arr("log_wage")
+    sigma_name = None
+    log_wage = None
+    if not _wage_fixed:
+        for sh in spec.wage_mean_shifters:
+            var = sh["variable"]
+            coef = sh["coefficient"]
+            if var == "intercept":
+                wage_terms.append((coef, None))
+            else:
+                arr = _arr(var)
+                if arr is not None:
+                    wage_terms.append((coef, arr))
+        sigma_name = spec.wage_variance_param
+        log_wage = _arr("log_wage")
 
     # market shifters (+ scales, + interaction working) and centering flag
     scale_map = getattr(spec, "market_opportunity_variable_scales", None) or {}
@@ -241,14 +246,17 @@ def build_jax_singles_ll(data, spec, is_male, use_actual_choice=False,
             x = arr * working if uw else arr
             log_h = log_h + P(cname) * x
 
-        # ---- wage opportunity (vw) ----
-        mu = jnp.zeros_like(u)
-        for cname, arr in wage_terms:
-            mu = mu + (P(cname) if arr is None else P(cname) * arr)
-        sigma = P(sigma_name)
-        resid = (log_wage - mu) / sigma
-        log_w_full = -0.5 * resid**2 - jnp.log(sigma) - 0.5 * LOG2PI - log_wage
-        log_w = jnp.where(working > 0, log_w_full, 0.0)
+        # ---- wage opportunity ----
+        if _wage_fixed:
+            log_w = jnp.zeros_like(u)   # fw: fixed wages, no wage density (no log_wage/sigma/wage params)
+        else:
+            mu = jnp.zeros_like(u)
+            for cname, arr in wage_terms:
+                mu = mu + (P(cname) if arr is None else P(cname) * arr)
+            sigma = P(sigma_name)
+            resid = (log_wage - mu) / sigma
+            log_w_full = -0.5 * resid**2 - jnp.log(sigma) - 0.5 * LOG2PI - log_wage
+            log_w = jnp.where(working > 0, log_w_full, 0.0)
 
         # ---- market opportunity (+ centering) ----
         log_market = jnp.zeros_like(u)
@@ -358,7 +366,9 @@ def build_jax_couples_ll(data, spec, use_actual_choice=False,
     hours_m = _hours("_male", working_m, "_m")
     hours_f = _hours("_female", working_f, "_f")
 
-    # wage: shared coef, gender data, worker-gated
+    # wage: shared coef, gender data, worker-gated (vw/loc_empirical only). For fixed wages
+    # (wage_spec=="fw") there is NO wage density: skip log_wage / shifters / wage_variance_param.
+    _wage_fixed = (getattr(spec, "wage_spec", "fw") == "fw")
     def _wage(suffix, working):
         terms = []
         lw = _arr("log_wage" + suffix)
@@ -371,9 +381,12 @@ def build_jax_couples_ll(data, spec, use_actual_choice=False,
                 if arr is not None:
                     terms.append((coef, arr))
         return lw, working, terms
-    wage_m = _wage("_male", working_m)
-    wage_f = _wage("_female", working_f)
-    sigma_name = spec.wage_variance_param
+    sigma_name = None
+    wage_m = wage_f = None
+    if not _wage_fixed:
+        wage_m = _wage("_male", working_m)
+        wage_f = _wage("_female", working_f)
+        sigma_name = spec.wage_variance_param
 
     # market: gsur(both: male+female), region/year/urb(household: var * (wm+wf)),
     # occupation loc4(male/female). gsur scaled by 10.
@@ -445,15 +458,18 @@ def build_jax_couples_ll(data, spec, use_actual_choice=False,
             x = arr * wk if uw else arr
             log_h = log_h + P(cn) * x
 
-        log_w = jnp.zeros_like(u)
-        for (lw, wk, terms) in (wage_m, wage_f):
-            mu = jnp.zeros_like(u)
-            for cn, arr in terms:
-                mu = mu + (P(cn) if arr is None else P(cn) * arr)
-            sigma = P(sigma_name)
-            resid = (lw - mu) / sigma
-            lwd = -0.5 * resid**2 - jnp.log(sigma) - 0.5 * LOG2PI - lw
-            log_w = log_w + jnp.where(wk > 0, lwd, 0.0)
+        if _wage_fixed:
+            log_w = jnp.zeros_like(u)   # fw: fixed wages, no wage density (no log_wage/sigma/wage params)
+        else:
+            log_w = jnp.zeros_like(u)
+            for (lw, wk, terms) in (wage_m, wage_f):
+                mu = jnp.zeros_like(u)
+                for cn, arr in terms:
+                    mu = mu + (P(cn) if arr is None else P(cn) * arr)
+                sigma = P(sigma_name)
+                resid = (lw - mu) / sigma
+                lwd = -0.5 * resid**2 - jnp.log(sigma) - 0.5 * LOG2PI - lw
+                log_w = log_w + jnp.where(wk > 0, lwd, 0.0)
 
         log_market = jnp.zeros_like(u)
         for cn, contrib in mkt_terms:

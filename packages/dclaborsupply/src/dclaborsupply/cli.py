@@ -138,8 +138,10 @@ def build_parser() -> argparse.ArgumentParser:
         "estimate", help="Estimate from a synthetic-fixture config (v0.1; real data deferred).")
     estimate.add_argument("--config", required=True, help="Path to a spec YAML with a `cli:` block.")
     estimate.add_argument("--out", required=True, help="Path to write the Result JSON.")
-    estimate.add_argument("--backend", default="jax", choices=["jax", "numpy"],
-                          help="Engine backend label (objective is JAX-built).")
+    estimate.add_argument("--backend", default="jax", choices=["jax"],
+                          help="Fitting backend (JAX only; the objective is JAX-built and "
+                               "optimized with L-BFGS-B). NumPy is available for likelihood "
+                               "evaluation via compute_index, not for fitting.")
     estimate.set_defaults(func=_cmd_estimate)
 
     summarize = subparsers.add_parser("summarize", help="Print summary() of a Result JSON.")
