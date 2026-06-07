@@ -27,6 +27,18 @@ from .draws_prep import (
     assert_choice_state_consistent,
 )
 from .pricing import de_earnings_policy
+from .engine_ready import (
+    EngineReadyResult,
+    assemble,
+    assemble_singles,
+    assemble_couples,
+    aggregate_consumption,
+    apply_consumption_floor,
+    restore_cluster_id,
+    loc4_one_hots,
+    DCM_MIN_POSITIVE,
+    TOTAL_LEISURE_HOURS,
+)
 
 __all__ = [
     "DE_CONFIG",
@@ -41,4 +53,14 @@ __all__ = [
     "canonicalize_post_draws",
     "assert_choice_state_consistent",
     "de_earnings_policy",
+    "EngineReadyResult",
+    "assemble",
+    "assemble_singles",
+    "assemble_couples",
+    "aggregate_consumption",
+    "apply_consumption_floor",
+    "restore_cluster_id",
+    "loc4_one_hots",
+    "DCM_MIN_POSITIVE",
+    "TOTAL_LEISURE_HOURS",
 ]
