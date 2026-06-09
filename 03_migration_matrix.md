@@ -69,6 +69,7 @@ Order within the wave is dependency-forced.
 | 3.3 | (new, thin) | `models.py` | Replace skeleton stubs: `RUMModel`/`RUROModel` construct `EstimationSpec` + call `compute_index`/optimizer. Thin front-ends, no engine logic. | 1.4, 2.3 | RUM fits synthetic fixed-choice data; RURO fits synthetic latent-jobs data and recovers θ* via 2.5 gate. |
 | 3.4 | existing skeleton `cli.py` + emitter logic from `step4_emit_results_json.py` (export shape only) | `cli.py` | Wire `dcls estimate --config --backend --out` to real fit; `summarize` reads result JSON. | 3.3 | `dcls estimate` on synthetic config produces a result JSON; `dcls summarize` reads it. |
 | 3.5 | (new) | `tests/`, `notebooks/` | Synthetic-DGP tests (RUM + RURO recovery); fill the two notebooks to run top-to-bottom. | 3.3, 3.4 | `pytest` green incl. recovery; both notebooks execute end-to-end. |
+| 3.6 | core ADDITION (commit `99a727c`) | `likelihood/engine_jax.py` + `models.py` + `cli.py` | **Truthful JAX fixed-wage support + dimension-drop recovery.** **Commit `99a727c`:** for `wage_spec="fw"` the wage opportunity is genuinely OPTIONAL — the JAX engine accesses no wage arrays, no σ, and no wage parameters on the fw path (not pinned-to-zero); the package front-end explicitly rejects `backend="numpy"` because no NumPy optimizer is implemented, while NumPy likelihood evaluation remains supported; only JAX fitting is exposed via the CLI. **Dimension-drop recovery PROVEN** for an identified hours-only fw RURO config with wage/occupation/market dimensions **ABSENT (not pinned)**: **20 free + 4 pinned leisure-curvature** params; all 7 pre-registered recovery gates pass; max \|θ̂−θ\*\|/SE **1.587**; fitted exact-JAX Hessian **PD, rank 20/20** (min eig **3.155**, cond **585.2**, all SEs finite>0); NumPy actual-choice DGP ↔ JAX recovery objective agree **≤2.0e-11**. See `docs/validation/dimension_drop_hours_only_fw.md`. **Scope:** identified **20-free** config only (NOT the original 24-free); **drop-only** flexibility (NOT substitution/arbitrary changes); **JAX fw path only** (NOT `loc_empirical`/`vw_occupation` — see `docs/known_limitations.md`); does NOT establish universal dimension-agnosticism. | 1.3, 3.3, 3.4 | ✅ PASSED. Regression: certified FR **vw** negLL preserved **238504.6360973987** (diff **3.99e-7** from the rounded certified target); JAX suite **217 passed**. Recovery evidence (scratch, uncommitted): `scratch/staging/hours_only_fw_recovery/{recover_1C.py, recover_1C_report.json, design_audit_1B.py, audit.py}`. |
 
 **Wave-3 stop condition = MVP v0.1 (memo §N):** import Java-free; certified spec → 47 params; RUM + RURO synthetic recovery; CLI works; notebooks run.
 
@@ -105,6 +106,29 @@ Lifted only after core v0.1 is frozen. Each is `app_package` per inventory. List
 
 ---
 
+## Known limitations & deferred items
+
+Detail in **`docs/known_limitations.md`**. Recorded here for matrix traceability:
+
+- **JAX wage-spec coverage (commit `99a727c`).** `fw` is implemented and
+  recovery-validated; standard `vw` is certified on FR and DE.
+  **`loc_empirical` and `vw_occupation` are PARSER-RECOGNIZED but have NO
+  dedicated JAX engine implementation** matching NumPy's distinct branches.
+  Do not use these specifications for JAX estimation until dedicated
+  implementations are added and separately gated (no code changed in this
+  pass).
+- **Draw-zero / non-employment canonicalization (FORMALLY DEFERRED).** The
+  unchanged core opportunity generator can leave non-employment rows
+  inconsistent (a draw-zero alternative with a positive realized wage at
+  `hours==0`; simulated non-employment rows retaining stale
+  `working`/`yemse`). DE's app-layer `canonicalize_post_draws`
+  (`packages/dclaborsupply_app/.../de/draws_prep.py`) is proven to repair it.
+  **Moving canonicalization into CORE is deferred to a separately gated
+  Wave-5 core-enhancement step requiring FR reproduction.** **Until then,
+  every country adapter using the current generator MUST apply an equivalent
+  post-draw canonicalization and validate the complete non-employment
+  state.**
+
 ## Provenance note (RESOLVED)
 
 **Wave 1.2 target reconciliation — RESOLVED:** the figure `238362.79` originally cited as the Wave 1.2 gate target is the **49-param gsplit** negLL (`238362.788142`, spec `joint_pooled_v1_bll0_tlmpin_gsplit`, `RURO_realdata_2016_2017_joint_901_gsplit_v1.md`) — a *different, non-certified* spec, NOT the certified 47-param baseline. The certified **47-param** baseline negLL is **238504.636097** (`RURO_realdata_2016_2017_joint_901_v1.md`); the ~142-nat gap is exactly the 2 extra gsplit free parameters. The lifted core engine reproduces the certified 47-param figure **exactly** (|lift − certified| = 0.0e+00) on the on-disk production stem `fr_p3a_bpool_engine_ready` at `theta_hat_realdata_901_v1.csv` — there is **no data-provenance blocker**. The earlier "d1w1 `__mnlmeta.json` missing" concern was a red herring induced by the wrong target number; `fr_p3a_bpool_engine_ready` IS the loadable certified production build.
@@ -126,4 +150,4 @@ Wave 0 (in-place R3+R1)  →  Wave 1 (spec+likelihood)  →  Wave 2 (SE/gates/so
                                                                               →  Wave 5 (optimize/de-redundancy/agnosticism-proof; each output-identical gated)
 ```
 
-*End of migration matrix. Wave 0–2 COMPLETE; Wave 3.1 is the current step. Wave 5 (compression, vectorization, agnosticism proof) is held until the relevant code is faithfully lifted and frozen.*
+*End of migration matrix. Waves 0–3 COMPLETE (MVP v0.1: Java-free import, certified spec → 47 params, RUM+RURO synthetic recovery, CLI, notebooks), plus core ADDITION 3.6 (truthful JAX fixed-wage support, commit `99a727c`). Wave 5.4-L (package-native loader) and 5.4 (DE self-contained estimation proof) are CLOSED. GENUINELY OPEN: Wave 4 (app package — EUROMOD / France-prep / pipeline / welfare / reports) and Wave 5.1–5.3 (de-redundancy, vectorization, cross-cutting cleanup), each behind its own output-identical gate. See `docs/known_limitations.md` for JAX wage-path limits and the formally-deferred draw-zero canonicalization.*
