@@ -51,3 +51,29 @@ validate the complete non-employment state (wage, `working`, `yemse`, and any
 other employment-conditional fields) before pricing or assembly. Skipping
 this yields inconsistent non-employment rows and is a correctness bug, not a
 cosmetic one.
+
+## `RUMModel.fit()` does not create the correction-null RUM view
+
+This matters for anyone (humans or LLMs) reasoning about what a "RUM fit"
+actually computes.
+
+- The only API that automatically constructs the correction-null RUM view is
+  `compute_index(spec, data, theta, ruro=False)`, which builds an evaluation
+  view (`build_rum_view`) that nulls every opportunity term and the
+  importance-sampling correction. This is an **evaluation** path.
+- **`RUMModel.fit()` does NOT use that view.** It builds the **same full JAX
+  objective as `RUROModel.fit()`** (both call the same `_build_objective`) from
+  the supplied spec/data. It does **not** automatically null opportunity terms
+  or set `prior == 1`. The `RUM`/`RURO` distinction at the front-end only
+  affects result metadata, not the fitted likelihood.
+
+**Consequence:** `RUMModel.fit()` equals a mathematical RUM fit **only when the
+inputs already satisfy** the null conditions: `wage_spec="fw"`, no
+hours/market/occupation opportunity shifters, and input `prior == 1`. Otherwise
+it is fitting the full RURO-style objective despite the `RUM` label. There is
+currently no front-end flag that forces the correction-null view during fitting;
+use `compute_index(..., ruro=False)` for a verified correction-null RUM
+*evaluation*. The shipped CLI smoke
+(`docs/examples/synthetic_cli_smoke.yaml`) deliberately does **not** meet these
+conditions (it has a non-uniform `prior`), so it is a front-end smoke, not a
+canonical RUM demonstration.

@@ -1,0 +1,77 @@
+# Runnable synthetic CLI / front-end smoke for dclaborsupply (v0.1 synthetic mode).
+#
+# Purpose: exercise the CLI estimate -> summarize path end-to-end on a small
+# in-memory fixture (real spec parser, JAX objective, L-BFGS-B optimizer, and
+# Hessian SE path). It is NOT real-data estimation (CLI real-data loading is
+# deferred in v0.1).
+#
+# IMPORTANT - this is NOT a canonical correction-null RUM example. It runs the
+# current RUM-LABELED front-end (cli.model: rum), but RUMModel.fit() builds the
+# SAME full JAX objective as RUROModel.fit() from this spec/data: it does NOT
+# automatically null opportunity terms or set prior == 1. The synthetic fixture
+# also has a non-uniform `prior`. So this smoke exercises the front-end path,
+# NOT the mathematical correction-null RUM contract. See docs/core_concepts.md
+# and docs/known_limitations.md.
+#
+# Run:
+#   dcls validate-config docs/examples/synthetic_cli_smoke.yaml
+#   dcls estimate --config docs/examples/synthetic_cli_smoke.yaml \
+#       --backend jax --out result.json
+#   dcls summarize --result result.json
+#
+# Free parameters after pinning (8): the four singles-male and four
+# singles-female preference params; everything in `fixed_params` is held fixed.
+
+specification:
+  name: synth_joint
+  wage_spec: "vw"
+
+utility:
+  functional_form: box_cox
+  consumption:
+    coefficient: beta_c
+    box_cox_exponent: theta_c
+  leisure:
+    intercept: beta_l0
+    box_cox_exponent: theta_l
+
+wage_opportunity:
+  specification: "log_normal"
+  variance:
+    parameter: "sigma"
+
+initial_values:
+  beta_l0_sm: 0.8
+  beta_c_sm: 0.8
+  theta_l_sm: 0.4
+  theta_c_sm: 0.4
+  beta_l0_sf: 0.8
+  beta_c_sf: 0.8
+  theta_l_sf: 0.4
+  theta_c_sf: 0.4
+  beta_l0_m: 1.0
+  theta_l_m: 0.5
+  beta_l0_f: 1.0
+  theta_l_f: 0.5
+  beta_c: 1.0
+  theta_c: 0.5
+  sigma: 0.5
+
+# Pin the couples and shared base parameters so only the 8 singles preference
+# parameters are free in this demonstration.
+fixed_params:
+  beta_l0_m: 1.0
+  theta_l_m: 0.5
+  beta_l0_f: 1.0
+  theta_l_f: 0.5
+  beta_c: 1.0
+  theta_c: 0.5
+  sigma: 0.5
+
+cli:
+  mode: synthetic
+  model: rum
+  compute_se: true
+  seed: 0
+  n_groups: 300
+  n_alts: 5
