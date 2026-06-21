@@ -747,7 +747,7 @@ def generate_draws_long(
         pd.to_numeric(decider_df[occ_col], errors="coerce")
         .fillna(-2)
         .astype(int)
-        .to_numpy()
+        .to_numpy(copy=True)
     )
     # --- SAFETY: ensure baseline occupation is valid for simulated working draws ---
     # Valid task groups assumed: 1..4 (loc4). If missing/invalid, impute pooled mode
