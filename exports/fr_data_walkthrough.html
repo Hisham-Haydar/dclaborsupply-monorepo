@@ -7312,6 +7312,7 @@ a.anchor-link {
                     processEnvironments: true
                 },
                 displayAlign: 'center',
+                messageStyle: 'none',
                 CommonHTML: {
                     linebreaks: {
                     automatic: true
@@ -7546,9 +7547,9 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_columns'</span><span class="p">,</span> <span class="mi">80</span><span class="p">);</span> <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.width'</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 
 <span class="c1"># THE ONE INPUT I CANNOT KNOW. Your FR EU-SILC / EUROMOD-input microdata file.</span>
@@ -8258,7 +8259,7 @@ core EUROMOD vars MISSING: []
 <span class="n">id2partner</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int64'</span><span class="p">),</span> <span class="n">idp</span><span class="p">))</span>
 <span class="n">idset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int64'</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">_mutual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_mutual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">b</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">idset</span> <span class="ow">and</span> <span class="n">id2partner</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">a</span>
 
 <span class="bp">cls</span> <span class="o">=</span> <span class="p">{}</span>
@@ -8330,17 +8331,17 @@ deciders flagged: 15968
 <div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">funnel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">funnel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s1">48s</span><span class="si">}</span><span class="s1"> households=</span><span class="si">{</span><span class="n">df</span><span class="p">[</span><span class="s2">"idhh"</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">:</span><span class="s1">6d</span><span class="si">}</span><span class="s1">  persons=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">:</span><span class="s1">6d</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span>
 
-<span class="k">def</span> <span class="nf">keep_all_deciders</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cond</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">keep_all_deciders</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cond</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Keep a household only if EVERY decider satisfies cond."""</span>
     <span class="n">dec</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'ruro_decider'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="n">bad</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dec</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">cond</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="s1">'idhh'</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bad</span><span class="p">))]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-<span class="k">def</span> <span class="nf">drop_hh</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">bad_idhh</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">drop_hh</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">bad_idhh</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bad_idhh</span><span class="p">))]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <span class="c1"># Step 4.0 — baseline: singles + opposite-sex couples only</span>
@@ -9468,7 +9469,7 @@ couples households: 2275
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Dedicated loc_ruro / loc4 construction (certified task groups)</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.data_prep</span> <span class="kn">import</span> <span class="n">collapse_loc_to_loc4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.data_prep</span><span class="w"> </span><span class="kn">import</span> <span class="n">collapse_loc_to_loc4</span>
 
 <span class="k">if</span> <span class="s1">'loc'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">"Cannot build loc4: raw occupation column 'loc' is missing."</span><span class="p">)</span>
@@ -9999,7 +10000,7 @@ Name: count, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">dclaborsupply_app.euromod</span> <span class="kn">import</span> <span class="n">EuromodConnector</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.euromod</span><span class="w"> </span><span class="kn">import</span> <span class="n">EuromodConnector</span>
 <span class="n">MODEL_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:</span><span class="se">\\</span><span class="s1">Users</span><span class="se">\\</span><span class="s1">hisham</span><span class="se">\\</span><span class="s1">MNL</span><span class="se">\\</span><span class="s1">EUROMOD-STORAGE</span><span class="se">\\</span><span class="s1">Euromod_model</span><span class="se">\\</span><span class="s1">EUROMOD_RELEASES_J2.0+'</span><span class="p">)</span>   <span class="c1"># CONFIRM (path) what em.Model() loadsds</span>
 <span class="n">FR_COUNTRY</span><span class="p">,</span> <span class="n">FR_SYSTEM</span><span class="p">,</span> <span class="n">FR_DATASET</span> <span class="o">=</span> <span class="s1">'FR'</span><span class="p">,</span> <span class="s1">'FR_2015'</span><span class="p">,</span> <span class="s1">'FR_2016_a3'</span>    <span class="c1"># CONFIRM system/dataset names</span>
 </pre></div>
@@ -10057,9 +10058,9 @@ Name: count, dtype: int64</pre>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Warning: 2.2 uprate_fr/Uprate (92d7000e-3a98-4649-89bd-509268b906d2): idperson 194070002: parts of yem do not sum up 0 &lt;&gt; 274,16667
 Warning: 2.2 uprate_fr/Uprate (92d7000e-3a98-4649-89bd-509268b906d2): idperson 321450001: parts of yem do not sum up 0 &lt;&gt; 211,66667
-Warning: 2.2 uprate_fr/Uprate (92d7000e-3a98-4649-89bd-509268b906d2): idperson 401360002: parts of yem do not sum up 0 &lt;&gt; 92,5
 Warning: 2.2 uprate_fr/Uprate (92d7000e-3a98-4649-89bd-509268b906d2): idperson 266590002: parts of yem do not sum up 0 &lt;&gt; 489,16667
 Warning: 2.2 uprate_fr/Uprate (92d7000e-3a98-4649-89bd-509268b906d2): idperson 183760002: parts of yem do not sum up 0 &lt;&gt; 96,666667
+Warning: 2.2 uprate_fr/Uprate (92d7000e-3a98-4649-89bd-509268b906d2): idperson 401360002: parts of yem do not sum up 0 &lt;&gt; 92,5
 Simulation for system FR_2015 with dataset FR_2016_a3 finished.
 priced shape: (9740, 388)  (full output)
 ils_dispy present: True
@@ -10087,7 +10088,7 @@ ils_dispy present: True
 <div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="k">if</span> <span class="s1">'priced'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">'Run section 6 first; priced is not defined because EUROMOD pricing has not completed.'</span><span class="p">)</span>
 <span class="k">if</span> <span class="s1">'ils_dispy'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">priced</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
@@ -10372,10 +10373,10 @@ single deciders   : 1555 | female share   : 0.541
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 9. Discover the REAL draws / engine-ready API (no guessing) ────────────</span>
-<span class="kn">import</span> <span class="nn">importlib</span><span class="o">,</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">pkgutil</span>
-<span class="kn">import</span> <span class="nn">dclaborsupply</span><span class="o">,</span> <span class="nn">dclaborsupply_app</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span><span class="o">,</span><span class="w"> </span><span class="nn">inspect</span><span class="o">,</span><span class="w"> </span><span class="nn">pkgutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dclaborsupply</span><span class="o">,</span><span class="w"> </span><span class="nn">dclaborsupply_app</span>
 
-<span class="k">def</span> <span class="nf">show_api</span><span class="p">(</span><span class="n">pkg</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">show_api</span><span class="p">(</span><span class="n">pkg</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">walk_packages</span><span class="p">(</span><span class="n">pkg</span><span class="o">.</span><span class="n">__path__</span><span class="p">,</span> <span class="n">pkg</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">'.'</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span>
                <span class="p">[</span><span class="s1">'draw'</span><span class="p">,</span> <span class="s1">'alternativ'</span><span class="p">,</span> <span class="s1">'continuous'</span><span class="p">,</span> <span class="s1">'engine_ready'</span><span class="p">,</span> <span class="s1">'prep'</span><span class="p">,</span> <span class="s1">'pricing'</span><span class="p">]):</span>
@@ -10412,14 +10413,14 @@ single deciders   : 1555 | female share   : 0.541
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>================ dclaborsupply (core) ================
-</pre>
+<pre>================ dclaborsupply (core) ================</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>
+
 MODULE dclaborsupply.alternatives.continuous
    generate_draws_long(df: 'pd.DataFrame', *, n_draws: 'int' = 99, wage_spec: 'str' = 'vw', occ_spec: 'str' = 'fixed', occ_strata: 'tuple[str, ...]' = ('dgn', 'educ3'), occ_min_cell: 'int' = 30, pi0_m: 'float' = 0.1, pi0_f: 'float' = 0.1, h_min: 'float' = 5.0, h_max: 'float' = 70.0, w_min: 'float' = 2.0, w_max: 'float' = 170.0, rng_seed: 'int' = 17) -&gt; 'pd.DataFrame'
         └ Take a RURO_ready dataset (one row per person) and return a long dataset
@@ -10598,9 +10599,9 @@ MODULE dclaborsupply_app.france.data_prep
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 10 (revised). Full columns + probe generate_draws_long ─────────────────</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">traceback</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.alternatives.continuous</span> <span class="kn">import</span> <span class="n">generate_draws_long</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.draws_prep</span> <span class="kn">import</span> <span class="n">assert_choice_state_consistent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.alternatives.continuous</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_draws_long</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.draws_prep</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_choice_state_consistent</span>
 
 <span class="k">if</span> <span class="s1">'educ3'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">singles_dec</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
     <span class="n">singles_dec</span><span class="p">[</span><span class="s1">'educ3'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
@@ -11830,7 +11831,7 @@ output columns: ['idhh', 'idperson', 'idfather', 'idmother', 'idpartner', 'idori
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 12. Canonicalize the post-draw non-employment state + inspect ──────────</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.draws_prep</span> <span class="kn">import</span> <span class="n">canonicalize_post_draws</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.draws_prep</span><span class="w"> </span><span class="kn">import</span> <span class="n">canonicalize_post_draws</span>
 <span class="n">draws_canon</span> <span class="o">=</span> <span class="n">canonicalize_post_draws</span><span class="p">(</span><span class="n">draws_long</span><span class="p">)</span>
 
 <span class="c1"># Post-draw consistency is alternative-state consistency: hours==0 rows are non-employment.</span>
@@ -12155,8 +12156,8 @@ output columns: ['idhh', 'idperson', 'idfather', 'idmother', 'idpartner', 'idori
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 13. Read the DE earnings-policy body (basis for the FR version) ────────</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.pricing</span> <span class="kn">import</span> <span class="n">de_earnings_policy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.pricing</span><span class="w"> </span><span class="kn">import</span> <span class="n">de_earnings_policy</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">de_earnings_policy</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -12195,16 +12196,906 @@ output columns: ['idhh', 'idperson', 'idfather', 'idmother', 'idpartner', 'idori
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1134499c">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1134499c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span> 
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 14. EMPIRICAL probe: does the yem00/yemxp 35h split move FR_2015 ils_dispy? ──</span>
+<span class="n">WEEKS</span> <span class="o">=</span> <span class="mf">13.0</span><span class="o">/</span><span class="mf">3.0</span>  <span class="c1"># 4.3333, EUROMOD weeks/month</span>
+<span class="k">if</span> <span class="s1">'em_input'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s1">'df'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">'Run sections 0-5 first; df is not defined.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'loc4'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">'Run section 5b first; loc4 has not been constructed.'</span><span class="p">)</span>
+    <span class="n">derived</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'household_class'</span><span class="p">,</span><span class="s1">'ruro_decider'</span><span class="p">,</span><span class="s1">'is_worker'</span><span class="p">,</span><span class="s1">'working'</span><span class="p">,</span><span class="s1">'working_pt1'</span><span class="p">,</span><span class="s1">'working_pt2'</span><span class="p">,</span>
+               <span class="s1">'working_ft'</span><span class="p">,</span><span class="s1">'working_lh'</span><span class="p">,</span><span class="s1">'educL'</span><span class="p">,</span><span class="s1">'educM'</span><span class="p">,</span><span class="s1">'educH'</span><span class="p">,</span><span class="s1">'wage_for_draws'</span><span class="p">,</span><span class="s1">'wage_ruro'</span><span class="p">,</span>
+               <span class="s1">'age_norm'</span><span class="p">,</span><span class="s1">'age_norm2'</span><span class="p">,</span><span class="s1">'female'</span><span class="p">,</span><span class="s1">'loc_raw'</span><span class="p">,</span><span class="s1">'loc_ruro'</span><span class="p">,</span><span class="s1">'loc4'</span><span class="p">,</span><span class="s1">'loc_armed'</span><span class="p">}</span>
+    <span class="n">em_input</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">derived</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">if</span> <span class="s1">'conn'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">EuromodConnector</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">MODEL_ROOT</span><span class="p">))</span>
+
+<span class="n">dec</span> <span class="o">=</span> <span class="n">singles_dec</span><span class="p">[</span><span class="n">singles_dec</span><span class="p">[</span><span class="s1">'is_worker'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">test_hh</span><span class="p">,</span> <span class="n">test_person</span> <span class="o">=</span> <span class="n">dec</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">],</span> <span class="n">dec</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span>
+<span class="n">base</span> <span class="o">=</span> <span class="n">em_input</span><span class="p">[</span><span class="n">em_input</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">test_hh</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">who</span> <span class="o">=</span> <span class="n">base</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span> <span class="o">==</span> <span class="n">test_person</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'test hh:'</span><span class="p">,</span> <span class="n">test_hh</span><span class="p">,</span> <span class="s1">'| decider idperson:'</span><span class="p">,</span> <span class="n">test_person</span><span class="p">,</span> <span class="s1">'| rows:'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">base</span><span class="p">))</span>
+
+<span class="n">hours</span><span class="p">,</span> <span class="n">wage</span> <span class="o">=</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">15.0</span>
+<span class="n">yem_total</span> <span class="o">=</span> <span class="n">wage</span> <span class="o">*</span> <span class="n">hours</span> <span class="o">*</span> <span class="n">WEEKS</span>
+<span class="n">yem_std</span>   <span class="o">=</span> <span class="n">wage</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">WEEKS</span>
+<span class="n">yem_ot</span>    <span class="o">=</span> <span class="n">wage</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">hours</span> <span class="o">-</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">WEEKS</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'target </span><span class="si">{</span><span class="n">yem_total</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">/mo  (std </span><span class="si">{</span><span class="n">yem_std</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> + ot </span><span class="si">{</span><span class="n">yem_ot</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">price_encoding</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">overrides</span><span class="p">):</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">g</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">who</span><span class="p">,</span> <span class="s1">'lhw'</span><span class="p">]</span> <span class="o">=</span> <span class="n">hours</span>
+    <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span> <span class="n">g</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">who</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="n">FR_COUNTRY</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">FR_SYSTEM</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">FR_DATASET</span><span class="p">)</span>
+    <span class="n">disp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span> <span class="o">==</span> <span class="n">test_person</span><span class="p">,</span> <span class="s1">'ils_dispy'</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s1">18s</span><span class="si">}</span><span class="s1"> ils_dispy = </span><span class="si">{</span><span class="n">disp</span><span class="si">:</span><span class="s1">10.2f</span><span class="si">}</span><span class="s1">   warnings: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">warnings</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">disp</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">pricing 3 encodings of the same earnings:'</span><span class="p">)</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">price_encoding</span><span class="p">(</span><span class="s1">'E1 all-standard'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'yem'</span><span class="p">:</span> <span class="n">yem_total</span><span class="p">,</span> <span class="s1">'yem00'</span><span class="p">:</span> <span class="n">yem_total</span><span class="p">,</span> <span class="s1">'yemxp'</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">price_encoding</span><span class="p">(</span><span class="s1">'E2 split-35h'</span><span class="p">,</span>    <span class="p">{</span><span class="s1">'yem'</span><span class="p">:</span> <span class="n">yem_total</span><span class="p">,</span> <span class="s1">'yem00'</span><span class="p">:</span> <span class="n">yem_std</span><span class="p">,</span>   <span class="s1">'yemxp'</span><span class="p">:</span> <span class="n">yem_ot</span><span class="p">})</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">price_encoding</span><span class="p">(</span><span class="s1">'E3 yem-only'</span><span class="p">,</span>     <span class="p">{</span><span class="s1">'yem'</span><span class="p">:</span> <span class="n">yem_total</span><span class="p">,</span> <span class="s1">'yem00'</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>       <span class="s1">'yemxp'</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">E1==E2? </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">d1</span><span class="o">-</span><span class="n">d2</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.01</span><span class="si">}</span><span class="s1">   (True -&gt; 35h split does NOT change disposable income)'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'E1==E3? </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">d1</span><span class="o">-</span><span class="n">d3</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.01</span><span class="si">}</span><span class="s1">   (True -&gt; yem carries earnings; yem00/yemxp informational)'</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>test hh: 1495800 | decider idperson: 149580001 | rows: 3
+target 2600.00/mo  (std 2275.00 + ot 325.00)
+
+pricing 3 encodings of the same earnings:
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+  E1 all-standard    ils_dispy =    2480.99   warnings: 0
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+  E2 split-35h       ils_dispy =    2480.99   warnings: 0
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Warning: 2.2 uprate_fr/Uprate (92d7000e-3a98-4649-89bd-509268b906d2): idperson 149580001: parts of yem do not sum up 2600 &lt;&gt; 0
+Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+  E3 yem-only        ils_dispy =     944.17   warnings: 0
+
+E1==E2? True   (True -&gt; 35h split does NOT change disposable income)
+E1==E3? False   (True -&gt; yem carries earnings; yem00/yemxp informational)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=03accd6f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 15. FR earnings policy + verification against observed FR encoding ──</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.euromod</span><span class="w"> </span><span class="kn">import</span> <span class="n">EuromodPricingRunner</span>
+
+<span class="n">WEEKS_PER_MONTH</span> <span class="o">=</span> <span class="mf">13.0</span> <span class="o">/</span> <span class="mf">3.0</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fr_earnings_policy</span><span class="p">(</span><span class="n">member</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wage</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                       <span class="n">weeks_per_month</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">WEEKS_PER_MONTH</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""FR decider-input overrides for one priced alternative.</span>
+
+<span class="sd">    Mirrors the active France MNL generated-alternative accounting in</span>
+<span class="sd">    scripts/enhanced/enh_RURO_euromod.py: split employment income at the</span>
+<span class="sd">    35h French workweek using the offer wage:</span>
+<span class="sd">        yem00 = wage * min(hours, 35) * weeks    (standard)</span>
+<span class="sd">        yemxp = wage * max(hours - 35, 0) * weeks  (overtime)</span>
+<span class="sd">    yem = yem00 + yemxp. If the input schema carries yemse, also keep</span>
+<span class="sd">    yemse = yem + yse. FR_2015 normally reads yse + yem00 + yemxp, while</span>
+<span class="sd">    yemse is a DE-style aggregate, so we do not inject it when absent.</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">yse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'yse'</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">yse</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span>
+    <span class="n">wrate</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wage</span><span class="p">)</span>
+    <span class="n">weeks</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">weeks_per_month</span><span class="p">)</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">wrate</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">weeks</span>
+    <span class="n">ot</span> <span class="o">=</span> <span class="n">wrate</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">weeks</span>
+    <span class="n">yem</span> <span class="o">=</span> <span class="n">std</span> <span class="o">+</span> <span class="n">ot</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'lhw'</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">'yem00'</span><span class="p">:</span> <span class="n">std</span><span class="p">,</span> <span class="s1">'yemxp'</span><span class="p">:</span> <span class="n">ot</span><span class="p">,</span> <span class="s1">'yem'</span><span class="p">:</span> <span class="n">yem</span><span class="p">}</span>
+    <span class="k">if</span> <span class="s1">'yemse'</span> <span class="ow">in</span> <span class="n">member</span><span class="p">:</span>
+        <span class="n">out</span><span class="p">[</span><span class="s1">'yemse'</span><span class="p">]</span> <span class="o">=</span> <span class="n">yem</span> <span class="o">+</span> <span class="n">yse</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+<span class="k">if</span> <span class="s1">'em_input'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s1">'df'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">'Run sections 0-5 first; df is not defined.'</span><span class="p">)</span>
+    <span class="n">derived</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'household_class'</span><span class="p">,</span><span class="s1">'ruro_decider'</span><span class="p">,</span><span class="s1">'is_worker'</span><span class="p">,</span><span class="s1">'working'</span><span class="p">,</span><span class="s1">'working_pt1'</span><span class="p">,</span><span class="s1">'working_pt2'</span><span class="p">,</span>
+               <span class="s1">'working_ft'</span><span class="p">,</span><span class="s1">'working_lh'</span><span class="p">,</span><span class="s1">'educL'</span><span class="p">,</span><span class="s1">'educM'</span><span class="p">,</span><span class="s1">'educH'</span><span class="p">,</span><span class="s1">'wage_for_draws'</span><span class="p">,</span><span class="s1">'wage_ruro'</span><span class="p">,</span>
+               <span class="s1">'age_norm'</span><span class="p">,</span><span class="s1">'age_norm2'</span><span class="p">,</span><span class="s1">'female'</span><span class="p">,</span><span class="s1">'loc_raw'</span><span class="p">,</span><span class="s1">'loc_ruro'</span><span class="p">,</span><span class="s1">'loc4'</span><span class="p">,</span><span class="s1">'loc_armed'</span><span class="p">}</span>
+    <span class="n">em_input</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">derived</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">if</span> <span class="s1">'conn'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">EuromodConnector</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">MODEL_ROOT</span><span class="p">))</span>
+
+<span class="c1"># (a) Observed-data diagnostic: raw yemxp can include overtime/bonus residuals,</span>
+<span class="c1"># so this does not have to match the generated-alternative accounting exactly.</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">singles_dec</span><span class="p">[</span><span class="n">singles_dec</span><span class="p">[</span><span class="s1">'is_worker'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'yivwg'</span><span class="p">,</span> <span class="s1">'yem_hour'</span><span class="p">,</span> <span class="s1">'lhw'</span><span class="p">,</span> <span class="s1">'yem00'</span><span class="p">,</span> <span class="s1">'yemxp'</span><span class="p">,</span> <span class="s1">'yem'</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">w</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
+<span class="n">pred00</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="s1">'yivwg'</span><span class="p">]</span> <span class="o">*</span> <span class="n">w</span><span class="p">[</span><span class="s1">'lhw'</span><span class="p">]</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">upper</span><span class="o">=</span><span class="mf">35.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">WEEKS_PER_MONTH</span>
+<span class="n">predxp</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="s1">'yivwg'</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="s1">'lhw'</span><span class="p">]</span> <span class="o">-</span> <span class="mf">35.0</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">WEEKS_PER_MONTH</span>
+<span class="n">err00</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="s1">'yem00'</span><span class="p">]</span> <span class="o">-</span> <span class="n">pred00</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+<span class="n">errxp</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="s1">'yemxp'</span><span class="p">]</span> <span class="o">-</span> <span class="n">predxp</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'workers:'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="s1">'| with yemxp&gt;0:'</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">w</span><span class="p">[</span><span class="s1">'yemxp'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'raw yem00 vs MNL split |err| med/95p/max: </span><span class="si">%.2f</span><span class="s1"> / </span><span class="si">%.2f</span><span class="s1"> / </span><span class="si">%.2f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">err00</span><span class="o">.</span><span class="n">median</span><span class="p">(),</span> <span class="n">err00</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">.95</span><span class="p">),</span> <span class="n">err00</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'raw yemxp vs MNL split |err| med/95p/max: </span><span class="si">%.2f</span><span class="s1"> / </span><span class="si">%.2f</span><span class="s1"> / </span><span class="si">%.2f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">errxp</span><span class="o">.</span><span class="n">median</span><span class="p">(),</span> <span class="n">errxp</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">.95</span><span class="p">),</span> <span class="n">errxp</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="k">if</span> <span class="s1">'yem_hour'</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="n">ot_equiv</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="s1">'yemxp'</span><span class="p">]</span> <span class="o">/</span> <span class="n">w</span><span class="p">[</span><span class="s1">'yem_hour'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="s1">'lhw'</span><span class="p">]</span> <span class="o">-</span> <span class="mf">35.0</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'median observed overtime-equivalent hours minus max(lhw-35,0): </span><span class="si">%.2f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">((</span><span class="n">ot_equiv</span> <span class="o">-</span> <span class="n">extra</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">median</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Interpretation: generated alternatives follow MNL straight split; raw yemxp is an observed residual component.'</span><span class="p">)</span>
+
+<span class="c1"># (b) Verify the policy itself matches the generated-alternative accounting.</span>
+<span class="n">policy_checks</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">member0</span> <span class="o">=</span> <span class="n">singles_dec</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">h</span><span class="p">,</span> <span class="n">wrate</span> <span class="ow">in</span> <span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">35.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">42.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">70.0</span><span class="p">,</span> <span class="mf">22.5</span><span class="p">)]:</span>
+    <span class="n">ov</span> <span class="o">=</span> <span class="n">fr_earnings_policy</span><span class="p">(</span><span class="n">member0</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">wage</span><span class="o">=</span><span class="n">wrate</span><span class="p">)</span>
+    <span class="n">expected00</span> <span class="o">=</span> <span class="n">wrate</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">WEEKS_PER_MONTH</span>
+    <span class="n">expectedxp</span> <span class="o">=</span> <span class="n">wrate</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">WEEKS_PER_MONTH</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ov</span><span class="p">[</span><span class="s1">'yem00'</span><span class="p">]</span> <span class="o">-</span> <span class="n">expected00</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ov</span><span class="p">[</span><span class="s1">'yemxp'</span><span class="p">]</span> <span class="o">-</span> <span class="n">expectedxp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ov</span><span class="p">[</span><span class="s1">'yem'</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">ov</span><span class="p">[</span><span class="s1">'yem00'</span><span class="p">]</span> <span class="o">+</span> <span class="n">ov</span><span class="p">[</span><span class="s1">'yemxp'</span><span class="p">]))</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+    <span class="n">policy_checks</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'hours'</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">'wage'</span><span class="p">:</span> <span class="n">wrate</span><span class="p">,</span> <span class="s1">'yem00'</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">ov</span><span class="p">[</span><span class="s1">'yem00'</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span>
+                          <span class="s1">'yemxp'</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">ov</span><span class="p">[</span><span class="s1">'yemxp'</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">'yem'</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">ov</span><span class="p">[</span><span class="s1">'yem'</span><span class="p">],</span> <span class="mi">2</span><span class="p">)})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Generated-alternative policy checks:'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">policy_checks</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">EuromodPricingRunner signatures:'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  __init__    '</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">EuromodPricingRunner</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  build_inputs'</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">EuromodPricingRunner</span><span class="o">.</span><span class="n">build_inputs</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  price       '</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">EuromodPricingRunner</span><span class="o">.</span><span class="n">price</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>workers: 1348 | with yemxp&gt;0: 690
+raw yem00 vs MNL split |err| med/95p/max: 43.95 / 868.22 / 11224.58
+raw yemxp vs MNL split |err| med/95p/max: 34.17 / 413.60 / 4707.08
+median observed overtime-equivalent hours minus max(lhw-35,0): 0.50
+Interpretation: generated alternatives follow MNL straight split; raw yemxp is an observed residual component.
+
+Generated-alternative policy checks:
+ hours  wage  yem00  yemxp    yem
+   0.0  18.0    0.0    0.0    0.0
+  20.0  12.0 1040.0    0.0 1040.0
+  35.0  15.0 2275.0    0.0 2275.0
+  42.0  15.0 2275.0  455.0 2730.0
+  70.0  22.5 3412.5 3412.5 6825.0
+
+EuromodPricingRunner signatures:
+  __init__     (connector: 'PricingConnector', policy: 'EarningsMutationPolicy', *, columns: 'Optional[PricingColumns]' = None, hh_base: 'int' = 900000000, person_mult: 'int' = 1000) -&gt; 'None'
+  build_inputs (self, alternatives: 'pd.DataFrame', baseline: 'pd.DataFrame', *, alt_key_cols: 'Sequence[str]', weeks_per_month: 'float' = 4.333333333333333, data_year: 'Optional[int]' = None) -&gt; 'tuple[pd.DataFrame, pd.DataFrame]'
+  price        (self, alternatives: 'pd.DataFrame', baseline: 'pd.DataFrame', *, country: 'str', system: 'str', dataset: 'str', alt_key_cols: 'Sequence[str]', weeks_per_month: 'float' = 4.333333333333333, data_year: 'Optional[int]' = None, dispy_col: 'str' = 'ils_dispy') -&gt; 'PricingResult'
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=41b0cfb2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 16-prep. Read the runner internals so the pricing call is exact ────────</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dclaborsupply_app.euromod</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">empkg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.euromod</span><span class="w"> </span><span class="kn">import</span> <span class="n">EuromodPricingRunner</span>
+<span class="n">runner_mod</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmodule</span><span class="p">(</span><span class="n">EuromodPricingRunner</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'runner module:'</span><span class="p">,</span> <span class="n">runner_mod</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">===== build_inputs ====='</span><span class="p">);</span>  <span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">EuromodPricingRunner</span><span class="o">.</span><span class="n">build_inputs</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">===== price ====='</span><span class="p">);</span>         <span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">EuromodPricingRunner</span><span class="o">.</span><span class="n">price</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">):</span> <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">empkg</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">runner_mod</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">nm</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'PricingColumns'</span><span class="p">,</span> <span class="s1">'PricingResult'</span><span class="p">,</span> <span class="s1">'PricingConnector'</span><span class="p">,</span> <span class="s1">'EarningsMutationPolicy'</span><span class="p">]:</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">===== </span><span class="si">{</span><span class="n">nm</span><span class="si">}</span><span class="s1"> ====='</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'(not found)'</span> <span class="k">if</span> <span class="n">o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>runner module: dclaborsupply_app.euromod.runner
+
+===== build_inputs =====
+    def build_inputs(
+        self,
+        alternatives: pd.DataFrame,
+        baseline: pd.DataFrame,
+        *,
+        alt_key_cols: Sequence[str],
+        weeks_per_month: float = WEEKS_PER_MONTH,
+        data_year: Optional[int] = None,
+    ) -&gt; tuple[pd.DataFrame, pd.DataFrame]:
+        """Validate and assemble (euromod_input, provenance). No pricing."""
+        c = self.c
+        alt_key_cols = list(alt_key_cols)
+        for col in [c.source_hh, c.decider_person, c.hours, c.wage, *alt_key_cols]:
+            if col not in alternatives.columns:
+                raise ValueError(f"alternatives missing required column '{col}'.")
+        for col in [c.hh, c.person]:
+            if col not in baseline.columns:
+                raise ValueError(f"baseline missing required column '{col}'.")
+
+        # duplicate alternative keys (same decider twice within one alternative)
+        key_full = [c.source_hh, *alt_key_cols, c.decider_person]
+        dups = alternatives.duplicated(subset=key_full)
+        if dups.any():
+            ex = alternatives.loc[dups, key_full].head(5).to_dict("records")
+            raise ValueError(f"duplicate alternative/decider keys ({int(dups.sum())}); e.g. {ex}")
+
+        rel_cols = [r for r in c.relationship_cols() if r in baseline.columns]
+        base_by_hh = {hh: g for hh, g in baseline.groupby(c.hh, sort=False)}
+        protected = c.protected_cols(alt_key_cols)
+
+        # Expected-decider contract: when the baseline carries the decider flag, the
+        # decider set of EVERY alternative must EXACTLY equal the flagged baseline
+        # deciders of its household (no missing, no extra). ruro_decider provenance is
+        # taken from this baseline flag, never derived from whichever rows appear.
+        has_flag = c.decider_flag in baseline.columns
+        expected_deciders: Dict[Any, set] = {}
+        if has_flag:
+            flagged = baseline[pd.to_numeric(baseline[c.decider_flag], errors="coerce").fillna(0) == 1]
+            for hhid, g in flagged.groupby(c.hh, sort=False):
+                expected_deciders[hhid] = set(g[c.person].astype("int64"))
+
+        # group alternatives -&gt; one alternative per (source_hh, *alt_key_cols)
+        alt_groups = alternatives.groupby([c.source_hh, *alt_key_cols], sort=False)
+        n_alts = alt_groups.ngroups
+        # unsafe-range checks
+        max_members = int(baseline.groupby(c.hh).size().max())
+        if max_members &gt;= self.person_mult:
+            raise ValueError(f"max members/household ({max_members}) &gt;= person_mult ({self.person_mult}); unsafe ids.")
+        max_new_hh = self.hh_base + n_alts
+        if max_new_hh * self.person_mult + max_members &gt; _INT64_MAX:
+            raise ValueError("synthetic id range exceeds int64; reduce hh_base/person_mult or n_alts.")
+
+        em_rows: List[pd.DataFrame] = []
+        prov_rows: List[pd.DataFrame] = []
+        rev_rows: List[dict] = []
+
+        for alt_idx, (_key, grp) in enumerate(alt_groups):
+            src_hh = grp[c.source_hh].iloc[0]
+            if src_hh not in base_by_hh:
+                raise ValueError(f"incomplete household restoration: baseline has no household {src_hh}.")
+            hh = base_by_hh[src_hh].copy().reset_index(drop=True)
+            n = len(hh)
+            if n == 0:
+                raise ValueError(f"incomplete household restoration: household {src_hh} has no members.")
+            orig_pids = hh[c.person].astype("int64").tolist()
+            # unresolved relationship refs (must point within this household)
+            pidset = set(orig_pids)
+            for rcol in rel_cols:
+                ref = pd.to_numeric(hh[rcol], errors="coerce").fillna(0).astype("int64")
+                bad = ref[(ref != 0) &amp; (~ref.isin(pidset))]
+                if len(bad):
+                    raise ValueError(
+                        f"unresolved relationship reference in household {src_hh}, column '{rcol}': "
+                        f"{bad.tolist()[:5]} not in {sorted(pidset)}.")
+
+            new_hh = self.hh_base + alt_idx
+            new_ids = {old: new_hh * self.person_mult + (k + 1) for k, old in enumerate(orig_pids)}
+
+            src_idhh = hh[c.hh].astype("int64").to_numpy()
+            if c.orig_hh in hh.columns:
+                src_orighh = hh[c.orig_hh].astype("int64").to_numpy()
+                if pd.Series(src_orighh).nunique() &gt; 1:
+                    raise ValueError(
+                        f"source_idorighh not household-consistent for household {src_hh}: "
+                        f"{sorted(set(src_orighh.tolist()))}.")
+            else:
+                src_orighh = src_idhh.copy()
+            src_person = np.array(orig_pids, dtype="int64")
+            orighh_of = dict(zip(orig_pids, src_orighh.tolist()))
+            dgn_vals = (pd.to_numeric(hh[c.dgn], errors="coerce").to_numpy()
+                        if c.dgn in hh.columns else np.full(n, np.nan))
+
+            # expected-decider completeness: actual decider set must equal the flagged set
+            actual_deciders = set()
+            for _, drow in grp.iterrows():
+                dpid = int(drow[c.decider_person])
+                if dpid not in set(orig_pids):
+                    raise ValueError(
+                        f"missing decision-maker: decider idperson {dpid} not a member of household {src_hh}.")
+                actual_deciders.add(dpid)
+            if has_flag:
+                exp = expected_deciders.get(src_hh, set())
+                if actual_deciders != exp:
+                    raise ValueError(
+                        f"decider-set mismatch for household {src_hh} alternative {_key}: "
+                        f"expected (flagged) {sorted(exp)} != actual {sorted(actual_deciders)} "
+                        f"(missing={sorted(exp - actual_deciders)}, extra={sorted(actual_deciders - exp)}).")
+                decider_prov = exp
+            else:
+                decider_prov = actual_deciders
+
+            # remap ids + relationships (0 stays 0)
+            hh[c.hh] = new_hh
+            if c.orig_hh in hh.columns:
+                hh[c.orig_hh] = new_hh
+            hh[c.person] = [new_ids[p] for p in orig_pids]
+            for rcol in rel_cols:
+                ref = pd.to_numeric(hh[rcol], errors="coerce").fillna(0).astype("int64")
+                hh[rcol] = [new_ids.get(int(x), 0) for x in ref]
+            if c.orig_person in hh.columns:
+                hh[c.orig_person] = hh[c.person]
+
+            # apply policy to each decider in this alternative (identity columns protected)
+            for _, drow in grp.iterrows():
+                dpid = int(drow[c.decider_person])
+                pos = orig_pids.index(dpid)
+                member = base_by_hh[src_hh].reset_index(drop=True).iloc[pos].to_dict()
+                overrides = self.policy(member, hours=float(drow[c.hours]),
+                                        wage=float(drow[c.wage]), weeks_per_month=weeks_per_month)
+                for col, val in overrides.items():
+                    if col in protected:
+                        raise ValueError(
+                            f"policy may not override protected identity/provenance/key column '{col}'.")
+                    if col not in hh.columns:
+                        raise ValueError(f"policy override column '{col}' not in baseline schema.")
+                    # cast integer baseline columns to float before writing a float override
+                    if hh[col].dtype.kind != "f":
+                        hh[col] = hh[col].astype("float64")
+                    hh.loc[pos, col] = float(val)
+
+            # provenance (kept OUT of the EUROMOD input; merged back onto output).
+            # ruro_decider comes from the EXPECTED (baseline-flagged) decider set.
+            prov = pd.DataFrame({
+                c.hh: hh[c.hh].to_numpy(), c.person: hh[c.person].to_numpy(),
+                "source_idhh": src_idhh, "source_idorighh": src_orighh,
+                "source_idperson": src_person,
+                "ruro_decider": [1 if p in decider_prov else 0 for p in orig_pids],
+                "dgn": dgn_vals,
+            })
+            for kc in alt_key_cols:
+                prov[kc] = grp[kc].iloc[0]
+            if data_year is not None:
+                prov["data_year"] = data_year
+            prov_rows.append(prov)
+
+            for old, new in new_ids.items():
+                rev_rows.append(dict(new_idhh=int(new_hh), new_idperson=int(new),
+                                     source_idhh=int(src_hh), source_idorighh=int(orighh_of[old]),
+                                     source_idperson=int(old),
+                                     **{kc: grp[kc].iloc[0] for kc in alt_key_cols}))
+            em_rows.append(hh)
+
+        euromod_input = pd.concat(em_rows, ignore_index=True)
+        # the decider flag is a control column, not a EUROMOD input variable -&gt; don't send it
+        euromod_input = euromod_input.drop(columns=[c.decider_flag], errors="ignore")
+        provenance = pd.concat(prov_rows, ignore_index=True)
+
+        # complete-membership + cross-household integrity verification
+        for new_hh, g in euromod_input.groupby(c.hh):
+            src = int(provenance.loc[provenance[c.hh] == new_hh, "source_idhh"].iloc[0])
+            if len(g) != len(base_by_hh[src]):
+                raise ValueError(f"incomplete household restoration for synthetic hh {new_hh}.")
+            pids = set(g[c.person].astype("int64"))
+            for rcol in rel_cols:
+                ref = pd.to_numeric(g[rcol], errors="coerce").fillna(0).astype("int64")
+                if int(((ref != 0) &amp; (~ref.isin(pids))).sum()) &gt; 0:
+                    raise ValueError(f"cross-household relationship reference in synthetic hh {new_hh}.")
+
+        self._reverse_mapping = pd.DataFrame(rev_rows)
+        return euromod_input, provenance
+
+
+===== price =====
+    def price(
+        self,
+        alternatives: pd.DataFrame,
+        baseline: pd.DataFrame,
+        *,
+        country: str,
+        system: str,
+        dataset: str,
+        alt_key_cols: Sequence[str],
+        weeks_per_month: float = WEEKS_PER_MONTH,
+        data_year: Optional[int] = None,
+        dispy_col: str = "ils_dispy",
+    ) -&gt; PricingResult:
+        """Build isolated alternatives, price via the connector, attach provenance,
+        and compute the separate uniform tax-unit totals."""
+        c = self.c
+        alt_key_cols = list(alt_key_cols)
+        euromod_input, provenance = self.build_inputs(
+            alternatives, baseline, alt_key_cols=alt_key_cols,
+            weeks_per_month=weeks_per_month, data_year=data_year)
+
+        res: PricingConnectorResult = self.connector.run(
+            euromod_input, country=country, system=system, dataset=dataset)
+        out = res.output.copy()
+        if dispy_col not in out.columns:
+            raise ValueError(f"connector output missing '{dispy_col}'.")
+
+        # --- connector-output one-to-one validation (before attaching provenance) ---
+        join = [c.hh, c.person]
+        for k in join:
+            if k not in out.columns:
+                raise ValueError(f"connector output missing synthetic id column '{k}'.")
+            out[k] = pd.to_numeric(out[k], errors="coerce").astype("int64")
+            provenance[k] = pd.to_numeric(provenance[k], errors="coerce").astype("int64")
+        if out.duplicated(subset=join).any():
+            n = int(out.duplicated(subset=join).sum())
+            raise ValueError(f"connector output has {n} duplicate synthetic (idhh, idperson) rows.")
+        expected = set(map(tuple, provenance[join].itertuples(index=False, name=None)))
+        got = set(map(tuple, out[join].itertuples(index=False, name=None)))
+        missing, extra = expected - got, got - expected
+        if missing:
+            raise ValueError(f"connector output missing {len(missing)} expected member(s); e.g. {sorted(missing)[:5]}.")
+        if extra:
+            raise ValueError(f"connector output has {len(extra)} unexpected member(s); e.g. {sorted(extra)[:5]}.")
+
+        # attach provenance (only columns not already produced by EUROMOD), by synthetic id.
+        # set-equality + no duplicates + validate="one_to_one" together guarantee complete
+        # one-to-one matching.
+        add_cols = [col for col in provenance.columns if col not in out.columns or col in join]
+        out = out.merge(provenance[add_cols], on=join, how="left", validate="one_to_one")
+
+        # SEPARATE tax-unit totals: uniform sum of raw nominal ils_dispy over all members
+        gcols = ["source_idhh", *alt_key_cols]
+        taxunit = (out.groupby(gcols, sort=False)[dispy_col].sum()
+                   .rename("ils_dispy_taxunit_sum").reset_index())
+
+        return PricingResult(
+            output=out, reverse_mapping=self._reverse_mapping, taxunit_totals=taxunit,
+            warnings=list(res.warnings), errors=list(res.errors))
+
+
+===== PricingColumns =====
+@dataclass
+class PricingColumns:
+    """Configurable ID / relationship-reference / state column names."""
+    hh: str = "idhh"                 # baseline household id (original)
+    person: str = "idperson"
+    partner: str = "idpartner"
+    father: str = "idfather"
+    mother: str = "idmother"
+    orig_hh: str = "idorighh"
+    orig_person: str = "idorigperson"
+    dgn: str = "dgn"
+    decider_flag: str = "ruro_decider"   # baseline flag marking expected deciders
+    # alternatives-table columns
+    source_hh: str = "source_idhh"   # links an alternative to its baseline household
+    decider_person: str = "decider_idperson"
+    hours: str = "hours"
+    wage: str = "wage"
+
+    def relationship_cols(self) -&gt; List[str]:
+        return [self.partner, self.father, self.mother]
+
+    def protected_cols(self, alt_key_cols: Sequence[str]) -&gt; set:
+        """Columns a country policy MUST NOT override (identity / provenance / keys)."""
+        return {
+            self.hh, self.person, self.orig_hh, self.orig_person, self.dgn,
+            *self.relationship_cols(),
+            "source_idhh", "source_idorighh", "source_idperson",
+            "ruro_decider", "data_year", *alt_key_cols,
+        }
+
+
+===== PricingResult =====
+@dataclass
+class PricingResult:
+    """Output of :meth:`EuromodPricingRunner.price`."""
+    output: pd.DataFrame              # raw per-person EUROMOD output + provenance; raw nominal ils_dispy
+    reverse_mapping: pd.DataFrame     # synthetic (idhh, idperson) -&gt; source ids + alt keys
+    taxunit_totals: pd.DataFrame      # alt keys (+ source_idhh) -&gt; ils_dispy_taxunit_sum
+    warnings: List[str] = field(default_factory=list)
+    errors: List[str] = field(default_factory=list)
+
+
+===== PricingConnector =====
+@runtime_checkable
+class PricingConnector(Protocol):
+    """A thing that prices a complete EUROMOD input DataFrame.
+
+    Implementations must NOT mutate ``data``; they return raw per-person output plus
+    any warning/error messages. The generic runner is written against this Protocol
+    only, so EUROMOD/Java stay out of the runner and out of package import.
+    """
+
+    def run(
+        self,
+        data: pd.DataFrame,
+        *,
+        country: str,
+        system: str,
+        dataset: str,
+    ) -&gt; PricingConnectorResult:
+        ...
+
+
+===== EarningsMutationPolicy =====
+class EarningsMutationPolicy(Protocol):
+    """Country labour-earnings mutation. Given a decider's baseline row and the
+    alternative's (hours, wage), return the column→value overrides to apply to that
+    decider before pricing. MUST NOT mutate ``member`` in place."""
+
+    def __call__(self, member: Mapping[str, Any], *, hours: float, wage: float,
+                 weeks_per_month: float) -&gt; Dict[str, float]:
+        ...
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9f12d2b7">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [27]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 16. Price alternatives via EuromodPricingRunner — SMOKE TEST (5 households) ──</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.euromod</span><span class="w"> </span><span class="kn">import</span> <span class="n">EuromodPricingRunner</span>
+
+<span class="c1"># (1) alternatives: runner reads source_idhh, decider_idperson, hours, wage + alt key 'draw'</span>
+<span class="n">alt</span> <span class="o">=</span> <span class="n">draws_canon</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">alt</span><span class="p">[</span><span class="s1">'source_idhh'</span><span class="p">]</span>      <span class="o">=</span> <span class="n">alt</span><span class="p">[</span><span class="s1">'idhh_true'</span><span class="p">]</span>
+<span class="n">alt</span><span class="p">[</span><span class="s1">'decider_idperson'</span><span class="p">]</span> <span class="o">=</span> <span class="n">alt</span><span class="p">[</span><span class="s1">'idperson_true'</span><span class="p">]</span>
+
+<span class="c1"># (2) baseline: full singles households (decider + members); EUROMOD-input cols + decider flag.</span>
+<span class="n">single_idhh</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'household_class'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'single'</span><span class="p">,</span> <span class="s1">'idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">keep</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">em_input</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'ruro_decider'</span><span class="p">]</span>
+<span class="n">baseline</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">single_idhh</span><span class="p">),</span> <span class="n">keep</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'baseline:'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">baseline</span><span class="p">),</span> <span class="s1">'rows |'</span><span class="p">,</span> <span class="n">baseline</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">(),</span> <span class="s1">'hh |'</span><span class="p">,</span>
+      <span class="nb">int</span><span class="p">(</span><span class="n">baseline</span><span class="p">[</span><span class="s1">'ruro_decider'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span> <span class="s1">'flagged deciders (should == hh)'</span><span class="p">)</span>
+
+<span class="n">runner</span> <span class="o">=</span> <span class="n">EuromodPricingRunner</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">fr_earnings_policy</span><span class="p">)</span>
+
+<span class="c1"># (3) smoke: 5 hh × 100 alts = 500 synthetic households</span>
+<span class="n">smoke_hh</span>   <span class="o">=</span> <span class="n">single_idhh</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">alt_smoke</span>  <span class="o">=</span> <span class="n">alt</span><span class="p">[</span><span class="n">alt</span><span class="p">[</span><span class="s1">'source_idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">smoke_hh</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">base_smoke</span> <span class="o">=</span> <span class="n">baseline</span><span class="p">[</span><span class="n">baseline</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">smoke_hh</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">price</span><span class="p">(</span><span class="n">alt_smoke</span><span class="p">,</span> <span class="n">base_smoke</span><span class="p">,</span>
+                   <span class="n">country</span><span class="o">=</span><span class="n">FR_COUNTRY</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">FR_SYSTEM</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">FR_DATASET</span><span class="p">,</span>
+                   <span class="n">alt_key_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">],</span> <span class="n">weeks_per_month</span><span class="o">=</span><span class="n">WEEKS_PER_MONTH</span><span class="p">,</span> <span class="n">data_year</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'priced rows:'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">output</span><span class="p">),</span> <span class="s1">'| warnings:'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">warnings</span><span class="p">),</span> <span class="s1">'| errors:'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">errors</span><span class="p">))</span>
+
+<span class="c1"># (4) sanity: one decider's consumption across its 100 alternatives, by hours (budget curve)</span>
+<span class="n">dec_rows</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">'ruro_decider'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="n">dec_rows</span><span class="p">[</span><span class="n">dec_rows</span><span class="p">[</span><span class="s1">'source_idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">smoke_hh</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+     <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">alt_smoke</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">alt_smoke</span><span class="p">[</span><span class="s1">'source_idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">smoke_hh</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="s1">'draw'</span><span class="p">,</span><span class="s1">'hours'</span><span class="p">,</span><span class="s1">'wage'</span><span class="p">,</span><span class="s1">'is_chosen'</span><span class="p">]],</span>
+            <span class="n">on</span><span class="o">=</span><span class="s1">'draw'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+     <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'hours'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">decider'</span><span class="p">,</span> <span class="n">smoke_hh</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">'— ils_dispy across alternatives (sorted by hours):'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g</span><span class="p">[[</span><span class="s1">'draw'</span><span class="p">,</span><span class="s1">'is_chosen'</span><span class="p">,</span><span class="s1">'hours'</span><span class="p">,</span><span class="s1">'wage'</span><span class="p">,</span><span class="s1">'ils_dispy'</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">tax-unit totals (head):'</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">taxunit_totals</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>baseline: 2236 rows | 1555 hh | 1555 flagged deciders (should == hh)
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+priced rows: 1000 | warnings: 0 | errors: 0
+
+decider 1495800 — ils_dispy across alternatives (sorted by hours):
+ draw  is_chosen    hours       wage   ils_dispy
+   13          0 0.000000   0.000000 1348.998200
+   10          0 0.000000   0.000000  944.169617
+   19          0 0.000000   0.000000 1348.998200
+   16          0 0.000000   0.000000  944.169617
+   59          0 0.000000   0.000000 1348.998200
+   61          0 0.000000   0.000000 1348.998200
+   43          0 0.000000   0.000000  944.169617
+   45          0 0.000000   0.000000 1348.998200
+   57          0 0.000000   0.000000 1348.998200
+   80          0 0.000000   0.000000 1348.998200
+   86          0 0.000000   0.000000  944.169617
+   83          0 0.000000   0.000000 1348.998200
+   27          0 5.225676  42.761706 1811.665991
+    7          0 5.826190 166.120814 3674.344803
+   64          0 5.881543  63.821952 2020.391014
+   89          0 7.288067  58.076835 2121.667896
+   20          0 7.568803 102.931149 3088.361357
+   21          0 8.161214  34.842955 1873.798394
+   92          0 8.337902  41.780289 1963.274901
+   96          0 8.428061 157.194895 4681.727108
+
+tax-unit totals (head):
+   source_idhh  draw  ils_dispy_taxunit_sum
+0      1495800     0            2055.699407
+1      1495800     1            3516.881851
+2      1495800     2           16584.717600
+3      1495800     3            4790.448322
+4      1495800     4            2743.383742
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=df7c2b27">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── DIAGNOSE: why do identical non-employment alternatives price to two values? ──</span>
+<span class="n">hh0</span> <span class="o">=</span> <span class="n">smoke_hh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dec_pid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">baseline</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">baseline</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">==</span><span class="n">hh0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">baseline</span><span class="p">[</span><span class="s1">'ruro_decider'</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">),</span> <span class="s1">'idperson'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># (A) ground truth: zero the decider's labour, price this household ALONE (one isolated run)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">em_input</span><span class="p">[</span><span class="n">em_input</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">==</span><span class="n">hh0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">who</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span><span class="o">==</span><span class="n">dec_pid</span>
+<span class="n">yse0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">who</span><span class="p">,</span><span class="s1">'yse'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="s1">'yse'</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="mf">0.0</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">'lhw'</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span><span class="s1">'yem'</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span><span class="s1">'yem00'</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span><span class="s1">'yemxp'</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span><span class="s1">'yemse'</span><span class="p">:</span><span class="n">yse0</span><span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">who</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
+<span class="n">r0</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="n">FR_COUNTRY</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">FR_SYSTEM</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">FR_DATASET</span><span class="p">)</span>
+<span class="n">alone</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">r0</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">r0</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span><span class="o">==</span><span class="n">dec_pid</span><span class="p">,</span><span class="s1">'ils_dispy'</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'(A) non-employment priced ALONE: </span><span class="si">{</span><span class="n">alone</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">  warnings=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">r0</span><span class="o">.</span><span class="n">warnings</span><span class="p">)</span><span class="si">}</span><span class="s1">   '</span>
+      <span class="sa">f</span><span class="s1">'(smoke gave both 1348.9982 and 944.1696)'</span><span class="p">)</span>
+
+<span class="c1"># (B) do two differently-priced non-employment draws build IDENTICAL inputs?</span>
+<span class="n">gg</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">output</span><span class="p">[(</span><span class="n">res</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">'source_idhh'</span><span class="p">]</span><span class="o">==</span><span class="n">hh0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">'ruro_decider'</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)]</span>
+      <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">alt_smoke</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">alt_smoke</span><span class="p">[</span><span class="s1">'source_idhh'</span><span class="p">]</span><span class="o">==</span><span class="n">hh0</span><span class="p">,</span> <span class="p">[</span><span class="s1">'draw'</span><span class="p">,</span><span class="s1">'hours'</span><span class="p">,</span><span class="s1">'wage'</span><span class="p">]],</span> <span class="n">on</span><span class="o">=</span><span class="s1">'draw'</span><span class="p">))</span>
+<span class="n">ne</span> <span class="o">=</span> <span class="n">gg</span><span class="p">[(</span><span class="n">gg</span><span class="p">[</span><span class="s1">'hours'</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">gg</span><span class="p">[</span><span class="s1">'wage'</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'ils_dispy'</span><span class="p">)</span>
+<span class="n">d_lo</span><span class="p">,</span> <span class="n">d_hi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ne</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">ne</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'(B) draw </span><span class="si">{</span><span class="n">d_lo</span><span class="si">}</span><span class="s1"> (=</span><span class="si">{</span><span class="n">ne</span><span class="p">[</span><span class="s2">"ils_dispy"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">) vs draw </span><span class="si">{</span><span class="n">d_hi</span><span class="si">}</span><span class="s1"> (=</span><span class="si">{</span><span class="n">ne</span><span class="p">[</span><span class="s2">"ils_dispy"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+
+<span class="n">two</span> <span class="o">=</span> <span class="n">alt_smoke</span><span class="p">[(</span><span class="n">alt_smoke</span><span class="p">[</span><span class="s1">'source_idhh'</span><span class="p">]</span><span class="o">==</span><span class="n">hh0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">alt_smoke</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">d_lo</span><span class="p">,</span><span class="n">d_hi</span><span class="p">]))]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">emi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">build_inputs</span><span class="p">(</span><span class="n">two</span><span class="p">,</span> <span class="n">baseline</span><span class="p">[</span><span class="n">baseline</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">==</span><span class="n">hh0</span><span class="p">],</span>
+                             <span class="n">alt_key_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">],</span> <span class="n">weeks_per_month</span><span class="o">=</span><span class="n">WEEKS_PER_MONTH</span><span class="p">)</span>
+<span class="n">emi</span> <span class="o">=</span> <span class="n">emi</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">_reverse_mapping</span><span class="p">[[</span><span class="s1">'new_idhh'</span><span class="p">,</span><span class="s1">'new_idperson'</span><span class="p">,</span><span class="s1">'source_idperson'</span><span class="p">,</span><span class="s1">'draw'</span><span class="p">]],</span>
+                <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">,</span><span class="s1">'idperson'</span><span class="p">],</span> <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s1">'new_idhh'</span><span class="p">,</span><span class="s1">'new_idperson'</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+<span class="n">idcols</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'idhh'</span><span class="p">,</span><span class="s1">'idperson'</span><span class="p">,</span><span class="s1">'idorighh'</span><span class="p">,</span><span class="s1">'idorigperson'</span><span class="p">,</span><span class="s1">'idpartner'</span><span class="p">,</span><span class="s1">'idfather'</span><span class="p">,</span><span class="s1">'idmother'</span><span class="p">,</span>
+          <span class="s1">'new_idhh'</span><span class="p">,</span><span class="s1">'new_idperson'</span><span class="p">,</span><span class="s1">'draw'</span><span class="p">,</span><span class="s1">'source_idperson'</span><span class="p">}</span>
+<span class="n">chk</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emi</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">idcols</span><span class="p">]</span>
+<span class="n">a</span>  <span class="o">=</span> <span class="n">emi</span><span class="p">[</span><span class="n">emi</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">]</span><span class="o">==</span><span class="n">d_lo</span><span class="p">]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'source_idperson'</span><span class="p">)[</span><span class="n">chk</span><span class="p">]</span>
+<span class="n">bb</span> <span class="o">=</span> <span class="n">emi</span><span class="p">[</span><span class="n">emi</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">]</span><span class="o">==</span><span class="n">d_hi</span><span class="p">]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'source_idperson'</span><span class="p">)[</span><span class="n">chk</span><span class="p">]</span>
+<span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">for</span> <span class="n">pid</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">chk</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pid</span><span class="p">,</span><span class="n">col</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pid</span><span class="p">,</span><span class="n">col</span><span class="p">]):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    DIFFERS person </span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pid</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="si">}</span><span class="s1"> vs </span><span class="si">{</span><span class="n">bb</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pid</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">);</span> <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'    inputs byte-identical -&gt; NOT an input difference. Re-price each of the two synthetic'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'    households ALONE; if they then agree, FR_2015 has a batch-relative element.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+(A) non-employment priced ALONE: 944.1696  warnings=0   (smoke gave both 1348.9982 and 944.1696)
+(B) draw 10 (=944.17) vs draw 83 (=1349.00)
+    inputs byte-identical -&gt; NOT an input difference. Re-price each of the two synthetic
+    households ALONE; if they then agree, FR_2015 has a batch-relative element.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=828299e0">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [29]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── DIAGNOSE 2: ID-driven? batch-relative? non-deterministic? order-sensitive? ──</span>
+<span class="c1"># Holds synthetic IDs fixed by rebuilding the exact smoke input, then tests:</span>
+<span class="c1"># full-batch reproducibility, each synthetic household alone, and two-household batches</span>
+<span class="c1"># in both orders. EUROMOD aborts in one order are caught and treated as order sensitivity.</span>
+<span class="n">hh0</span> <span class="o">=</span> <span class="n">smoke_hh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">emi_full</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">build_inputs</span><span class="p">(</span><span class="n">alt_smoke</span><span class="p">,</span> <span class="n">base_smoke</span><span class="p">,</span> <span class="n">alt_key_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">],</span>
+                                  <span class="n">weeks_per_month</span><span class="o">=</span><span class="n">WEEKS_PER_MONTH</span><span class="p">)</span>
+<span class="n">rev</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">_reverse_mapping</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">dec_pid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">base_smoke</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">base_smoke</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">hh0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">base_smoke</span><span class="p">[</span><span class="s1">'ruro_decider'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">'idperson'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">synth</span><span class="p">(</span><span class="n">draw</span><span class="p">):</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">rev</span><span class="p">[(</span><span class="n">rev</span><span class="p">[</span><span class="s1">'source_idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">hh0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rev</span><span class="p">[</span><span class="s1">'draw'</span><span class="p">]</span> <span class="o">==</span> <span class="n">draw</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">'new_idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s1">'source_idperson'</span><span class="p">]</span> <span class="o">==</span> <span class="n">dec_pid</span><span class="p">,</span> <span class="s1">'new_idperson'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">nh10</span><span class="p">,</span> <span class="n">np10</span> <span class="o">=</span> <span class="n">synth</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">nh83</span><span class="p">,</span> <span class="n">np83</span> <span class="o">=</span> <span class="n">synth</span><span class="p">(</span><span class="mi">83</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">disp_of</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">pid</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">out</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span> <span class="o">==</span> <span class="n">pid</span><span class="p">,</span> <span class="s1">'ils_dispy'</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_run</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="n">FR_COUNTRY</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">FR_SYSTEM</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">FR_DATASET</span><span class="p">)</span><span class="o">.</span><span class="n">output</span>
+        <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s1">'</span>
+
+<span class="c1"># (1)+(2) price the WHOLE smoke input twice -&gt; reproduce + determinism</span>
+<span class="n">o1</span><span class="p">,</span> <span class="n">e1</span> <span class="o">=</span> <span class="n">safe_run</span><span class="p">(</span><span class="s1">'batch run1'</span><span class="p">,</span> <span class="n">emi_full</span><span class="p">)</span>
+<span class="n">o2</span><span class="p">,</span> <span class="n">e2</span> <span class="o">=</span> <span class="n">safe_run</span><span class="p">(</span><span class="s1">'batch run2'</span><span class="p">,</span> <span class="n">emi_full</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">e1</span> <span class="ow">or</span> <span class="n">e2</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'BATCH run failed:'</span><span class="p">,</span> <span class="n">e1</span> <span class="ow">or</span> <span class="n">e2</span><span class="p">)</span>
+    <span class="n">det</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">d10_1</span><span class="p">,</span> <span class="n">d83_1</span> <span class="o">=</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">np10</span><span class="p">),</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">np83</span><span class="p">)</span>
+    <span class="n">d10_2</span><span class="p">,</span> <span class="n">d83_2</span> <span class="o">=</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">o2</span><span class="p">,</span> <span class="n">np10</span><span class="p">),</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">o2</span><span class="p">,</span> <span class="n">np83</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'BATCH run1: draw10=</span><span class="si">%.4f</span><span class="s1"> draw83=</span><span class="si">%.4f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">d10_1</span><span class="p">,</span> <span class="n">d83_1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'BATCH run2: draw10=</span><span class="si">%.4f</span><span class="s1"> draw83=</span><span class="si">%.4f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">d10_2</span><span class="p">,</span> <span class="n">d83_2</span><span class="p">))</span>
+    <span class="n">det</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d10_1</span> <span class="o">-</span> <span class="n">d10_2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d83_1</span> <span class="o">-</span> <span class="n">d83_2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'  deterministic across identical re-runs:'</span><span class="p">,</span> <span class="n">det</span><span class="p">)</span>
+
+<span class="c1"># (3) each synthetic household ALONE (ids preserved from the batch build)</span>
+<span class="n">o10</span><span class="p">,</span> <span class="n">e10</span> <span class="o">=</span> <span class="n">safe_run</span><span class="p">(</span><span class="s1">'alone draw10'</span><span class="p">,</span> <span class="n">emi_full</span><span class="p">[</span><span class="n">emi_full</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">nh10</span><span class="p">])</span>
+<span class="n">o83</span><span class="p">,</span> <span class="n">e83</span> <span class="o">=</span> <span class="n">safe_run</span><span class="p">(</span><span class="s1">'alone draw83'</span><span class="p">,</span> <span class="n">emi_full</span><span class="p">[</span><span class="n">emi_full</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">nh83</span><span class="p">])</span>
+<span class="k">if</span> <span class="n">e10</span> <span class="ow">or</span> <span class="n">e83</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'ALONE failed:'</span><span class="p">,</span> <span class="n">e10</span> <span class="ow">or</span> <span class="n">e83</span><span class="p">)</span>
+    <span class="n">a10</span> <span class="o">=</span> <span class="n">a83</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">a10</span><span class="p">,</span> <span class="n">a83</span> <span class="o">=</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">o10</span><span class="p">,</span> <span class="n">np10</span><span class="p">),</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">o83</span><span class="p">,</span> <span class="n">np83</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'ALONE:      draw10=</span><span class="si">%.4f</span><span class="s1"> draw83=</span><span class="si">%.4f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">a10</span><span class="p">,</span> <span class="n">a83</span><span class="p">))</span>
+
+<span class="c1"># (4) the two together, both orders</span>
+<span class="n">s10</span> <span class="o">=</span> <span class="n">emi_full</span><span class="p">[</span><span class="n">emi_full</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">nh10</span><span class="p">]</span>
+<span class="n">s83</span> <span class="o">=</span> <span class="n">emi_full</span><span class="p">[</span><span class="n">emi_full</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">nh83</span><span class="p">]</span>
+<span class="n">oAB</span><span class="p">,</span> <span class="n">eAB</span> <span class="o">=</span> <span class="n">safe_run</span><span class="p">(</span><span class="s1">'pair 10,83'</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">s10</span><span class="p">,</span> <span class="n">s83</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">oBA</span><span class="p">,</span> <span class="n">eBA</span> <span class="o">=</span> <span class="n">safe_run</span><span class="p">(</span><span class="s1">'pair 83,10'</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">s83</span><span class="p">,</span> <span class="n">s10</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="k">if</span> <span class="n">eAB</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'PAIR[10,83]: failed:'</span><span class="p">,</span> <span class="n">eAB</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'PAIR[10,83]: draw10=</span><span class="si">%.4f</span><span class="s1"> draw83=</span><span class="si">%.4f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">disp_of</span><span class="p">(</span><span class="n">oAB</span><span class="p">,</span> <span class="n">np10</span><span class="p">),</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">oAB</span><span class="p">,</span> <span class="n">np83</span><span class="p">)))</span>
+<span class="k">if</span> <span class="n">eBA</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'PAIR[83,10]: failed:'</span><span class="p">,</span> <span class="n">eBA</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'PAIR[83,10]: draw10=</span><span class="si">%.4f</span><span class="s1"> draw83=</span><span class="si">%.4f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">disp_of</span><span class="p">(</span><span class="n">oBA</span><span class="p">,</span> <span class="n">np10</span><span class="p">),</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">oBA</span><span class="p">,</span> <span class="n">np83</span><span class="p">)))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">VERDICT:'</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">e1</span> <span class="ow">or</span> <span class="n">e2</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'  BATCH RUN ERROR: cannot test determinism until full smoke batch runs twice.'</span><span class="p">)</span>
+<span class="k">elif</span> <span class="ow">not</span> <span class="n">det</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'  NON-DETERMINISTIC: identical input, different output across runs.'</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">a10</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">a83</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a10</span> <span class="o">-</span> <span class="n">a83</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'  SYNTHETIC-ID-DRIVEN: identical inputs differ even when each priced alone.'</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">eAB</span> <span class="ow">or</span> <span class="n">eBA</span><span class="p">:</span>
+        <span class="n">osens</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">osens</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">disp_of</span><span class="p">(</span><span class="n">oAB</span><span class="p">,</span> <span class="n">np10</span><span class="p">)</span> <span class="o">-</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">oBA</span><span class="p">,</span> <span class="n">np10</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1e-3</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">disp_of</span><span class="p">(</span><span class="n">oAB</span><span class="p">,</span> <span class="n">np83</span><span class="p">)</span> <span class="o">-</span> <span class="n">disp_of</span><span class="p">(</span><span class="n">oBA</span><span class="p">,</span> <span class="n">np83</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1e-3</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'  BATCH-RELATIVE: agree alone (</span><span class="si">%.4f</span><span class="s1">), split/error when co-priced. order-sensitive: </span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">a10</span><span class="p">,</span> <span class="n">osens</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+BATCH run1: draw10=944.1696 draw83=1348.9982
+BATCH run2: draw10=944.1696 draw83=1348.9982
+  deterministic across identical re-runs: True
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+ALONE:      draw10=944.1696 draw83=944.1696
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Simulation for system FR_2015 with dataset FR_2016_a3 finished.
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Error: List is not sorted by household!
+Error: List is not sorted by household!
+Error: List is not sorted by household!
+PAIR[10,83]: draw10=944.1696 draw83=1348.9982
+PAIR[83,10]: failed: Exception: Simulation for system FR_2015 with dataset FR_2016_a3 aborted with errors.
+
+VERDICT:
+  BATCH-RELATIVE: agree alone (944.1696), split/error when co-priced. order-sensitive: True
+</pre>
 </div>
 </div>
 </div>
