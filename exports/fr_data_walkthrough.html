@@ -7312,6 +7312,7 @@ a.anchor-link {
                     processEnvironments: true
                 },
                 displayAlign: 'center',
+                messageStyle: 'none',
                 CommonHTML: {
                     linebreaks: {
                     automatic: true
@@ -7331,7 +7332,12 @@ a.anchor-link {
     if (!diagrams.length) {
       return;
     }
-    const mermaid = (await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.7.0/mermaid.esm.min.mjs")).default;
+    const mermaid = (await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.0/mermaid.esm.min.mjs")).default;
+    const elkUrl = "https://cdnjs.cloudflare.com/ajax/libs/mermaid-layout-elk/0.1.9/mermaid-layout-elk.esm.min.mjs";
+    if(elkUrl) {
+      const elkLayouts = (await import(elkUrl)).default;
+      mermaid.registerLayoutLoaders(elkLayouts);
+    }
     const parser = new DOMParser();
 
     mermaid.initialize({
@@ -7428,7 +7434,8 @@ a.anchor-link {
      * Post-process to ensure mermaid diagrams contain only valid SVG and XHTML.
      */
     function cleanMermaidSvg(svg) {
-      return svg.replace(RE_VOID_ELEMENT, replaceVoidElement);
+      svg = svg.replace(RE_VOID_ELEMENT, replaceVoidElement);
+      return `${SVG_XML_HEADER}${svg}`;
     }
 
 
@@ -7454,6 +7461,285 @@ a.anchor-link {
       }
       return `<${tag} ${rest}>`;
     }
+
+
+  /**
+   * Named HTML entities with their decimal equivalent codes.
+   *
+   * @see https://www.w3.org/TR/WD-html40-970708/sgml/entities.html
+   * */
+  const HTML_ENTITIES = `<!ENTITY Aacute "&#193;">
+<!ENTITY aacute "&#225;">
+<!ENTITY Acirc "&#194;">
+<!ENTITY acirc "&#226;">
+<!ENTITY acute "&#180;">
+<!ENTITY AElig "&#198;">
+<!ENTITY aelig "&#230;">
+<!ENTITY Agrave "&#192;">
+<!ENTITY agrave "&#224;">
+<!ENTITY alefsym "&#8501;">
+<!ENTITY Alpha "&#913;">
+<!ENTITY alpha "&#945;">
+<!ENTITY amp "&#38;">
+<!ENTITY and "&#8869;">
+<!ENTITY ang "&#8736;">
+<!ENTITY Aring "&#197;">
+<!ENTITY aring "&#229;">
+<!ENTITY asymp "&#8776;">
+<!ENTITY Atilde "&#195;">
+<!ENTITY atilde "&#227;">
+<!ENTITY Auml "&#196;">
+<!ENTITY auml "&#228;">
+<!ENTITY bdquo "&#8222;">
+<!ENTITY Beta "&#914;">
+<!ENTITY beta "&#946;">
+<!ENTITY brvbar "&#166;">
+<!ENTITY bull "&#8226;">
+<!ENTITY cap "&#8745;">
+<!ENTITY Ccedil "&#199;">
+<!ENTITY ccedil "&#231;">
+<!ENTITY cedil "&#184;">
+<!ENTITY cent "&#162;">
+<!ENTITY Chi "&#935;">
+<!ENTITY chi "&#967;">
+<!ENTITY circ "&#710;">
+<!ENTITY clubs "&#9827;">
+<!ENTITY cong "&#8773;">
+<!ENTITY copy "&#169;">
+<!ENTITY crarr "&#8629;">
+<!ENTITY cup "&#8746;">
+<!ENTITY curren "&#164;">
+<!ENTITY dagger "&#8224;">
+<!ENTITY Dagger "&#8225;">
+<!ENTITY darr "&#8595;">
+<!ENTITY dArr "&#8659;">
+<!ENTITY deg "&#176;">
+<!ENTITY Delta "&#916;">
+<!ENTITY delta "&#948;">
+<!ENTITY diams "&#9830;">
+<!ENTITY divide "&#247;">
+<!ENTITY Eacute "&#201;">
+<!ENTITY eacute "&#233;">
+<!ENTITY Ecirc "&#202;">
+<!ENTITY ecirc "&#234;">
+<!ENTITY Egrave "&#200;">
+<!ENTITY egrave "&#232;">
+<!ENTITY empty "&#8709;">
+<!ENTITY emsp "&#8195;">
+<!ENTITY ensp "&#8194;">
+<!ENTITY epsilon "&#949;">
+<!ENTITY Epsilon "&#917;">
+<!ENTITY equiv "&#8801;">
+<!ENTITY Eta "&#919;">
+<!ENTITY eta "&#951;">
+<!ENTITY ETH "&#208;">
+<!ENTITY eth "&#240;">
+<!ENTITY Euml "&#203;">
+<!ENTITY euml "&#235;">
+<!ENTITY exist "&#8707;">
+<!ENTITY fnof "&#402;">
+<!ENTITY forall "&#8704;">
+<!ENTITY frac12 "&#189;">
+<!ENTITY frac14 "&#188;">
+<!ENTITY frac34 "&#190;">
+<!ENTITY frasl "&#8260;">
+<!ENTITY Gamma "&#915;">
+<!ENTITY gamma "&#947;">
+<!ENTITY ge "&#8805;">
+<!ENTITY gt "&#62;">
+<!ENTITY harr "&#8596;">
+<!ENTITY hArr "&#8660;">
+<!ENTITY hearts "&#9829;">
+<!ENTITY hellip "&#8230;">
+<!ENTITY Iacute "&#205;">
+<!ENTITY iacute "&#237;">
+<!ENTITY Icirc "&#206;">
+<!ENTITY icirc "&#238;">
+<!ENTITY iexcl "&#161;">
+<!ENTITY Igrave "&#204;">
+<!ENTITY igrave "&#236;">
+<!ENTITY image "&#8465;">
+<!ENTITY infin "&#8734;">
+<!ENTITY int "&#8747;">
+<!ENTITY Iota "&#921;">
+<!ENTITY iota "&#953;">
+<!ENTITY iquest "&#191;">
+<!ENTITY isin "&#8712;">
+<!ENTITY Iuml "&#207;">
+<!ENTITY iuml "&#239;">
+<!ENTITY Kappa "&#922;">
+<!ENTITY kappa "&#954;">
+<!ENTITY Lambda "&#923;">
+<!ENTITY lambda "&#955;">
+<!ENTITY lang "&#9001;">
+<!ENTITY laquo "&#171;">
+<!ENTITY larr "&#8592;">
+<!ENTITY lArr "&#8656;">
+<!ENTITY lceil "&#8968;">
+<!ENTITY ldquo "&#8220;">
+<!ENTITY le "&#8804;">
+<!ENTITY lfloor "&#8970;">
+<!ENTITY lowast "&#8727;">
+<!ENTITY loz "&#9674;">
+<!ENTITY lrm "&#8206;">
+<!ENTITY lsaquo "&#8249;">
+<!ENTITY lsquo "&#8216;">
+<!ENTITY lt "&#60;">
+<!ENTITY macr "&#175;">
+<!ENTITY mdash "&#8212;">
+<!ENTITY micro "&#181;">
+<!ENTITY middot "&#183;">
+<!ENTITY minus "&#8722;">
+<!ENTITY Mu "&#924;">
+<!ENTITY mu "&#956;">
+<!ENTITY nabla "&#8711;">
+<!ENTITY nbsp "&#160;">
+<!ENTITY ndash "&#8211;">
+<!ENTITY ne "&#8800;">
+<!ENTITY ni "&#8715;">
+<!ENTITY not "&#172;">
+<!ENTITY notin "&#8713;">
+<!ENTITY nsub "&#8836;">
+<!ENTITY Ntilde "&#209;">
+<!ENTITY ntilde "&#241;">
+<!ENTITY Nu "&#925;">
+<!ENTITY nu "&#957;">
+<!ENTITY Oacute "&#211;">
+<!ENTITY oacute "&#243;">
+<!ENTITY Ocirc "&#212;">
+<!ENTITY ocirc "&#244;">
+<!ENTITY OElig "&#338;">
+<!ENTITY oelig "&#339;">
+<!ENTITY Ograve "&#210;">
+<!ENTITY ograve "&#242;">
+<!ENTITY oline "&#8254;">
+<!ENTITY Omega "&#937;">
+<!ENTITY omega "&#969;">
+<!ENTITY Omicron "&#927;">
+<!ENTITY omicron "&#959;">
+<!ENTITY oplus "&#8853;">
+<!ENTITY or "&#8870;">
+<!ENTITY ordf "&#170;">
+<!ENTITY ordm "&#186;">
+<!ENTITY Oslash "&#216;">
+<!ENTITY oslash "&#248;">
+<!ENTITY Otilde "&#213;">
+<!ENTITY otilde "&#245;">
+<!ENTITY otimes "&#8855;">
+<!ENTITY Ouml "&#214;">
+<!ENTITY ouml "&#246;">
+<!ENTITY para "&#182;">
+<!ENTITY part "&#8706;">
+<!ENTITY permil "&#8240;">
+<!ENTITY perp "&#8869;">
+<!ENTITY Phi "&#934;">
+<!ENTITY phi "&#966;">
+<!ENTITY Pi "&#928;">
+<!ENTITY pi "&#960;">
+<!ENTITY piv "&#982;">
+<!ENTITY plusmn "&#177;">
+<!ENTITY pound "&#163;">
+<!ENTITY prime "&#8242;">
+<!ENTITY Prime "&#8243;">
+<!ENTITY prod "&#8719;">
+<!ENTITY prop "&#8733;">
+<!ENTITY Psi "&#936;">
+<!ENTITY psi "&#968;">
+<!ENTITY quot "&#34;">
+<!ENTITY radic "&#8730;">
+<!ENTITY rang "&#9002;">
+<!ENTITY raquo "&#187;">
+<!ENTITY rarr "&#8594;">
+<!ENTITY rArr "&#8658;">
+<!ENTITY rceil "&#8969;">
+<!ENTITY rdquo "&#8221;">
+<!ENTITY real "&#8476;">
+<!ENTITY reg "&#174;">
+<!ENTITY rfloor "&#8971;">
+<!ENTITY Rho "&#929;">
+<!ENTITY rho "&#961;">
+<!ENTITY rlm "&#8207;">
+<!ENTITY rsaquo "&#8250;">
+<!ENTITY rsquo "&#8217;">
+<!ENTITY sbquo "&#8218;">
+<!ENTITY Scaron "&#352;">
+<!ENTITY scaron "&#353;">
+<!ENTITY sdot "&#8901;">
+<!ENTITY sect "&#167;">
+<!ENTITY shy "&#173;">
+<!ENTITY Sigma "&#931;">
+<!ENTITY sigma "&#963;">
+<!ENTITY sigmaf "&#962;">
+<!ENTITY sim "&#8764;">
+<!ENTITY spades "&#9824;">
+<!ENTITY sub "&#8834;">
+<!ENTITY sube "&#8838;">
+<!ENTITY sum "&#8721;">
+<!ENTITY sup "&#8835;">
+<!ENTITY sup1 "&#185;">
+<!ENTITY sup2 "&#178;">
+<!ENTITY sup3 "&#179;">
+<!ENTITY supe "&#8839;">
+<!ENTITY szlig "&#223;">
+<!ENTITY Tau "&#932;">
+<!ENTITY tau "&#964;">
+<!ENTITY there4 "&#8756;">
+<!ENTITY Theta "&#920;">
+<!ENTITY theta "&#952;">
+<!ENTITY thetasym "&#977;">
+<!ENTITY thinsp "&#8201;">
+<!ENTITY THORN "&#222;">
+<!ENTITY thorn "&#254;">
+<!ENTITY tilde "&#732;">
+<!ENTITY times "&#215;">
+<!ENTITY trade "&#8482;">
+<!ENTITY Uacute "&#218;">
+<!ENTITY uacute "&#250;">
+<!ENTITY uarr "&#8593;">
+<!ENTITY uArr "&#8657;">
+<!ENTITY Ucirc "&#219;">
+<!ENTITY ucirc "&#251;">
+<!ENTITY Ugrave "&#217;">
+<!ENTITY ugrave "&#249;">
+<!ENTITY uml "&#168;">
+<!ENTITY upsih "&#978;">
+<!ENTITY Upsilon "&#933;">
+<!ENTITY upsilon "&#965;">
+<!ENTITY Uuml "&#220;">
+<!ENTITY uuml "&#252;">
+<!ENTITY weierp "&#8472;">
+<!ENTITY Xi "&#926;">
+<!ENTITY xi "&#958;">
+<!ENTITY Yacute "&#221;">
+<!ENTITY yacute "&#253;">
+<!ENTITY yen "&#165;">
+<!ENTITY Yuml "&#376;">
+<!ENTITY yuml "&#255;">
+<!ENTITY Zeta "&#918;">
+<!ENTITY zeta "&#950;">
+<!ENTITY zwj "&#8205;">
+<!ENTITY zwnj "&#8204;">`.replace(/\n/g, ' ');
+
+  /**
+   * A reasonably strict xml declaration.
+   */
+  const XML_DECL = '<?xml version="1.0" standalone="no"?>';
+
+  /**
+   * The beginning of the XML doctype declaration.
+   */
+  const DOCTYPE_START = `<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [`;
+
+  /**
+   * The end of the XML docype declaration.
+   */
+  const DOCTYPE_END = ']>';
+
+  /**
+   * A full header for an SVG XML document.
+   */
+  const SVG_XML_HEADER = `${XML_DECL}
+    ${DOCTYPE_START}${HTML_ENTITIES}${DOCTYPE_END}`;
 
     void Promise.all([...diagrams].map(renderOneMarmaid));
   });
@@ -7546,9 +7832,9 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_columns'</span><span class="p">,</span> <span class="mi">80</span><span class="p">);</span> <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.width'</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 
 <span class="c1"># THE ONE INPUT I CANNOT KNOW. Your FR EU-SILC / EUROMOD-input microdata file.</span>
@@ -8200,7 +8486,7 @@ n persons   : 26560
 <span class="n">id2partner</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int64'</span><span class="p">),</span> <span class="n">idp</span><span class="p">))</span>
 <span class="n">idset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s1">'idperson'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int64'</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">_mutual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_mutual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">b</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">idset</span> <span class="ow">and</span> <span class="n">id2partner</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">a</span>
 
 <span class="bp">cls</span> <span class="o">=</span> <span class="p">{}</span>
@@ -8272,17 +8558,17 @@ deciders flagged: 15968
 <div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">funnel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">funnel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s1">48s</span><span class="si">}</span><span class="s1"> households=</span><span class="si">{</span><span class="n">df</span><span class="p">[</span><span class="s2">"idhh"</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">:</span><span class="s1">6d</span><span class="si">}</span><span class="s1">  persons=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">:</span><span class="s1">6d</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span>
 
-<span class="k">def</span> <span class="nf">keep_all_deciders</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cond</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">keep_all_deciders</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cond</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Keep a household only if EVERY decider satisfies cond."""</span>
     <span class="n">dec</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'ruro_decider'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="n">bad</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dec</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">cond</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="s1">'idhh'</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bad</span><span class="p">))]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-<span class="k">def</span> <span class="nf">drop_hh</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">bad_idhh</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">drop_hh</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">bad_idhh</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">bad_idhh</span><span class="p">))]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <span class="c1"># Step 4.0 — baseline: singles + opposite-sex couples only</span>
@@ -9410,7 +9696,7 @@ couples households: 2275
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Dedicated loc_ruro / loc4 construction (certified task groups)</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.data_prep</span> <span class="kn">import</span> <span class="n">collapse_loc_to_loc4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.data_prep</span><span class="w"> </span><span class="kn">import</span> <span class="n">collapse_loc_to_loc4</span>
 
 <span class="k">if</span> <span class="s1">'loc'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">"Cannot build loc4: raw occupation column 'loc' is missing."</span><span class="p">)</span>
@@ -9941,7 +10227,7 @@ Name: count, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">dclaborsupply_app.euromod</span> <span class="kn">import</span> <span class="n">EuromodConnector</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.euromod</span><span class="w"> </span><span class="kn">import</span> <span class="n">EuromodConnector</span>
 <span class="n">MODEL_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:</span><span class="se">\\</span><span class="s1">Users</span><span class="se">\\</span><span class="s1">hisham</span><span class="se">\\</span><span class="s1">MNL</span><span class="se">\\</span><span class="s1">EUROMOD-STORAGE</span><span class="se">\\</span><span class="s1">Euromod_model</span><span class="se">\\</span><span class="s1">EUROMOD_RELEASES_J2.0+'</span><span class="p">)</span>   <span class="c1"># CONFIRM (path) what em.Model() loadsds</span>
 <span class="n">FR_COUNTRY</span><span class="p">,</span> <span class="n">FR_SYSTEM</span><span class="p">,</span> <span class="n">FR_DATASET</span> <span class="o">=</span> <span class="s1">'FR'</span><span class="p">,</span> <span class="s1">'FR_2015'</span><span class="p">,</span> <span class="s1">'FR_2016_a3'</span>    <span class="c1"># CONFIRM system/dataset names</span>
 </pre></div>
@@ -10023,7 +10309,7 @@ ils_dispy present: True
 <div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="k">if</span> <span class="s1">'priced'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">'Run section 6 first; priced is not defined because EUROMOD pricing has not completed.'</span><span class="p">)</span>
 <span class="k">if</span> <span class="s1">'ils_dispy'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">priced</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
@@ -10308,10 +10594,10 @@ single deciders   : 1555 | female share   : 0.541
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 9. Discover the REAL draws / engine-ready API (no guessing) ────────────</span>
-<span class="kn">import</span> <span class="nn">importlib</span><span class="o">,</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">pkgutil</span>
-<span class="kn">import</span> <span class="nn">dclaborsupply</span><span class="o">,</span> <span class="nn">dclaborsupply_app</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span><span class="o">,</span><span class="w"> </span><span class="nn">inspect</span><span class="o">,</span><span class="w"> </span><span class="nn">pkgutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dclaborsupply</span><span class="o">,</span><span class="w"> </span><span class="nn">dclaborsupply_app</span>
 
-<span class="k">def</span> <span class="nf">show_api</span><span class="p">(</span><span class="n">pkg</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">show_api</span><span class="p">(</span><span class="n">pkg</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">walk_packages</span><span class="p">(</span><span class="n">pkg</span><span class="o">.</span><span class="n">__path__</span><span class="p">,</span> <span class="n">pkg</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">'.'</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span>
                <span class="p">[</span><span class="s1">'draw'</span><span class="p">,</span> <span class="s1">'alternativ'</span><span class="p">,</span> <span class="s1">'continuous'</span><span class="p">,</span> <span class="s1">'engine_ready'</span><span class="p">,</span> <span class="s1">'prep'</span><span class="p">,</span> <span class="s1">'pricing'</span><span class="p">]):</span>
@@ -10522,9 +10808,9 @@ MODULE dclaborsupply_app.france.data_prep
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 10 (revised). Full columns + probe generate_draws_long ─────────────────</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">traceback</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.alternatives.continuous</span> <span class="kn">import</span> <span class="n">generate_draws_long</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.draws_prep</span> <span class="kn">import</span> <span class="n">assert_choice_state_consistent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.alternatives.continuous</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_draws_long</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.draws_prep</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_choice_state_consistent</span>
 
 <span class="k">if</span> <span class="s1">'educ3'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">singles_dec</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
     <span class="n">singles_dec</span><span class="p">[</span><span class="s1">'educ3'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
@@ -11748,7 +12034,7 @@ draws_long shape: (155500, 161)   (expect 155500)
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 12. Canonicalize the post-draw non-employment state + inspect ──────────</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.draws_prep</span> <span class="kn">import</span> <span class="n">canonicalize_post_draws</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.draws_prep</span><span class="w"> </span><span class="kn">import</span> <span class="n">canonicalize_post_draws</span>
 <span class="n">draws_canon</span> <span class="o">=</span> <span class="n">canonicalize_post_draws</span><span class="p">(</span><span class="n">draws_long</span><span class="p">)</span>
 
 <span class="c1"># Post-draw consistency is alternative-state consistency: hours==0 rows are non-employment.</span>
@@ -12098,7 +12384,7 @@ draws_long shape: (155500, 161)   (expect 155500)
 <span class="n">yem_ot</span>    <span class="o">=</span> <span class="n">wage</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">hours</span> <span class="o">-</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">WEEKS</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'target </span><span class="si">{</span><span class="n">yem_total</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">/mo  (std </span><span class="si">{</span><span class="n">yem_std</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> + ot </span><span class="si">{</span><span class="n">yem_ot</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">price_encoding</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">overrides</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">price_encoding</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">overrides</span><span class="p">):</span>
     <span class="n">g</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">g</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">who</span><span class="p">,</span> <span class="s1">'lhw'</span><span class="p">]</span> <span class="o">=</span> <span class="n">hours</span>
     <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span> <span class="n">g</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">who</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
@@ -12153,13 +12439,13 @@ E1==E3? False   (True -&gt; yem carries earnings; yem00/yemxp informational)
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 15. FR earnings policy + verification against observed FR encoding ──</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Mapping</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.euromod</span> <span class="kn">import</span> <span class="n">EuromodPricingRunner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.euromod</span><span class="w"> </span><span class="kn">import</span> <span class="n">EuromodPricingRunner</span>
 
 <span class="n">WEEKS_PER_MONTH</span> <span class="o">=</span> <span class="mf">13.0</span> <span class="o">/</span> <span class="mf">3.0</span>
 
-<span class="k">def</span> <span class="nf">fr_earnings_policy</span><span class="p">(</span><span class="n">member</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wage</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fr_earnings_policy</span><span class="p">(</span><span class="n">member</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wage</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                        <span class="n">weeks_per_month</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">WEEKS_PER_MONTH</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""FR decider-input overrides for one priced alternative.</span>
 
@@ -12279,7 +12565,7 @@ EuromodPricingRunner signatures:
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 16. Price alternatives via EuromodPricingRunner — SMOKE TEST (5 households) ──</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.euromod</span> <span class="kn">import</span> <span class="n">EuromodPricingRunner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.euromod</span><span class="w"> </span><span class="kn">import</span> <span class="n">EuromodPricingRunner</span>
 
 <span class="c1"># (1) alternatives: runner reads source_idhh, decider_idperson, hours, wage + alt key 'draw'</span>
 <span class="n">alt</span> <span class="o">=</span> <span class="n">draws_canon</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -12373,7 +12659,7 @@ tax-unit totals (head):
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── DIAGNOSE 3b: per-draw population sweep (original ids) — stable? ────────</span>
-<span class="k">def</span> <span class="nf">sweep_price</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sweep_price</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">hh</span> <span class="ow">in</span> <span class="n">smoke_hh</span><span class="p">:</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">em_input</span><span class="p">[</span><span class="n">em_input</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span><span class="o">==</span><span class="n">hh</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -12465,7 +12751,7 @@ hh0 non-emp target (isolated ground truth): 944.1696
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 16. FULL singles pricing — deterministic (bsa00yn_a=1), chunked, resumable ──</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="n">PRICE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'fr_singles_pricing_v1'</span><span class="p">);</span> <span class="n">PRICE_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">baseline_full</span> <span class="o">=</span> <span class="n">baseline</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -12478,7 +12764,7 @@ hh0 non-emp target (isolated ground truth): 944.1696
 <span class="n">FULLYEAR_COLS</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">'yemmy'</span><span class="p">:</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s1">'lunmy'</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">baseline_full</span><span class="o">.</span><span class="n">columns</span><span class="p">}</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'working-alternative fixes:'</span><span class="p">,</span> <span class="n">WORKING_ZERO_COLS</span><span class="p">,</span> <span class="n">FULLYEAR_COLS</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">fr_earnings_policy_v2</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">wage</span><span class="p">,</span> <span class="n">weeks_per_month</span><span class="o">=</span><span class="n">WEEKS_PER_MONTH</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fr_earnings_policy_v2</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">wage</span><span class="p">,</span> <span class="n">weeks_per_month</span><span class="o">=</span><span class="n">WEEKS_PER_MONTH</span><span class="p">):</span>
     <span class="n">ov</span> <span class="o">=</span> <span class="n">fr_earnings_policy</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">wage</span><span class="o">=</span><span class="n">wage</span><span class="p">,</span> <span class="n">weeks_per_month</span><span class="o">=</span><span class="n">weeks_per_month</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">WORKING_ZERO_COLS</span><span class="p">:</span> <span class="n">ov</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -12623,8 +12909,8 @@ median bsaot | &gt;0 : 52.79
 <div class="jp-InputPrompt jp-InputArea-prompt">In [29]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.engine_ready</span> <span class="kn">import</span> <span class="n">assemble_singles</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.engine_ready</span><span class="w"> </span><span class="kn">import</span> <span class="n">assemble_singles</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">assemble_singles</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -12761,7 +13047,7 @@ rows adjusted: 15798 of 223600  (1174 households)  median subtraction: 345.34
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 17b. Assembly contract: required features vs what our frames carry ──────</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de</span> <span class="kn">import</span> <span class="n">engine_ready</span> <span class="k">as</span> <span class="n">er</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de</span><span class="w"> </span><span class="kn">import</span> <span class="n">engine_ready</span> <span class="k">as</span> <span class="n">er</span>
 <span class="n">req</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">_REQUIRED_FEATURES</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'TOTAL_LEISURE_HOURS ='</span><span class="p">,</span> <span class="n">er</span><span class="o">.</span><span class="n">TOTAL_LEISURE_HOURS</span><span class="p">,</span> <span class="s1">'| DCM_MIN_POSITIVE ='</span><span class="p">,</span> <span class="n">er</span><span class="o">.</span><span class="n">DCM_MIN_POSITIVE</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'_DE_ZERO_STUBS ='</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">_DE_ZERO_STUBS</span><span class="p">))</span>
@@ -12806,11 +13092,11 @@ priced_masked has: ['source_idhh', 'draw', 'ils_dispy_takeup', 'ruro_decider']
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 17c. Resolve the contract: prior provenance, wave01 identity, n_children ──</span>
 
-<span class="kn">import</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">import</span> <span class="nn">dclaborsupply.alternatives.continuous</span> <span class="k">as</span> <span class="nn">cont</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dclaborsupply.alternatives.continuous</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cont</span>
 
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de</span> <span class="kn">import</span> <span class="n">engine_ready</span> <span class="k">as</span> <span class="n">er</span><span class="p">,</span> <span class="n">data_prep</span> <span class="k">as</span> <span class="n">dp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de</span><span class="w"> </span><span class="kn">import</span> <span class="n">engine_ready</span> <span class="k">as</span> <span class="n">er</span><span class="p">,</span> <span class="n">data_prep</span> <span class="k">as</span> <span class="n">dp</span>
 
 <span class="c1"># (1) where does log_prior come from? every 'prior' line in the core draws module</span>
 
@@ -12963,7 +13249,7 @@ at(dag[df["ruro_sample"] == 1].mean())
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 17d. Features frame under the assembly contract (identity gate + renames) ──</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de</span> <span class="kn">import</span> <span class="n">engine_ready</span> <span class="k">as</span> <span class="n">er</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de</span><span class="w"> </span><span class="kn">import</span> <span class="n">engine_ready</span> <span class="k">as</span> <span class="n">er</span>
 
 <span class="n">feat</span> <span class="o">=</span> <span class="n">draws_canon</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
@@ -13034,7 +13320,7 @@ rows: 155500 | unique (hh, draw): 155500
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 17e. Assemble engine-ready singles (floor, cluster_id, loc4, normalization) ──</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply_app.de.engine_ready</span> <span class="kn">import</span> <span class="n">assemble_singles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply_app.de.engine_ready</span><span class="w"> </span><span class="kn">import</span> <span class="n">assemble_singles</span>
 
 <span class="c1"># Draw-0 fix-up: generate_draws_long keeps the OBSERVED loc4 on draw 0 (it only</span>
 <span class="c1"># forces -1 where hours==0), so the "unknown observed occupation" workers kept in</span>
@@ -13106,8 +13392,8 @@ saved fr_singles_engine_ready_v1.parquet
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 18. Load the certified spec: architecture + binding vs engine-ready ─────</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply</span> <span class="kn">import</span> <span class="n">EstimationSpec</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.spec.parser</span> <span class="kn">import</span> <span class="n">load_custom_initial_values</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply</span><span class="w"> </span><span class="kn">import</span> <span class="n">EstimationSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.spec.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_custom_initial_values</span>
 
 <span class="c1"># Certified 47-param baseline (beta_ll=0 + theta_l_m pinned) + its 901 warm start.</span>
 <span class="c1"># (The gsplit variant exists alongside but FAILED the synthetic 901 gate — not certified.)</span>
@@ -13357,8 +13643,8 @@ saved fr_singles_engine_ready_v3.parquet  (v2 kept; gsur live, raw share — spe
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 19. negLL at certified warm start — singles only, flatness + liveness ───</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.likelihood.index</span> <span class="kn">import</span> <span class="n">compute_index</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.data.loader</span> <span class="kn">import</span> <span class="n">load_singles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.likelihood.index</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_index</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.data.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_singles</span>
 
 <span class="c1"># compute_index contract (likelihood/index.py:119-145): theta must be the ORDERED</span>
 <span class="c1"># free vector (len == spec.all_param_names), and each data entry a</span>
@@ -13392,7 +13678,7 @@ saved fr_singles_engine_ready_v3.parquet  (v2 kept; gsur live, raw share — spe
 <span class="n">data_sm</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">sm_df</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">metadata</span><span class="o">=</span><span class="n">norm_meta</span><span class="p">)</span>
 <span class="n">data_sf</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">sf_df</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">norm_meta</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">negll</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">negll</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="c1"># backend='numpy': the JAX joint builder does NOT skip a None couples group</span>
     <span class="c1"># (engine_jax.build_joint_neg_ll builds all three); the NumPy engine does</span>
     <span class="c1"># (engine_numpy.compute_likelihood_joint guards each group with is-not-None checks).</span>
@@ -13405,7 +13691,7 @@ saved fr_singles_engine_ready_v3.parquet  (v2 kept; gsur live, raw share — spe
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">negll_ruro</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">negll_rum</span><span class="p">)</span>
 
 <span class="n">idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">)}</span>
-<span class="k">def</span> <span class="nf">probe</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">probe</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
     <span class="n">t2</span> <span class="o">=</span> <span class="n">theta0</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">t2</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">pname</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">dv</span>
     <span class="k">return</span> <span class="n">negll</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span> <span class="o">-</span> <span class="n">negll_ruro</span>
 
@@ -13451,8 +13737,8 @@ live beta_w0         ΔnegLL=-37064.6197  OK
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 19-final. Deterministic v4: reload → regions → gsur → age fix → re-probe ──</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.likelihood.index</span> <span class="kn">import</span> <span class="n">compute_index</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.data.loader</span> <span class="kn">import</span> <span class="n">load_singles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.likelihood.index</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_index</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.data.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_singles</span>
 
 <span class="n">er4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">'fr_singles_engine_ready_v3.parquet'</span><span class="p">)</span>
 
@@ -13506,7 +13792,7 @@ live beta_w0         ΔnegLL=-37064.6197  OK
 <span class="n">data_sm</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">sm_df</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">metadata</span><span class="o">=</span><span class="n">norm_meta</span><span class="p">)</span>
 <span class="n">data_sf</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">sf_df</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">norm_meta</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">negll</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">negll</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">compute_index</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="p">(</span><span class="n">data_sm</span><span class="p">,</span> <span class="n">data_sf</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">t</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="n">ruro</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">))</span>
 
 <span class="n">negll_ruro</span> <span class="o">=</span> <span class="n">negll</span><span class="p">(</span><span class="n">theta0</span><span class="p">)</span>
@@ -13515,7 +13801,7 @@ live beta_w0         ΔnegLL=-37064.6197  OK
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'negLL ruro=False: </span><span class="si">{</span><span class="n">negll_rum</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">negll_ruro</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">negll_rum</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">probe</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">probe</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="n">t2</span> <span class="o">=</span> <span class="n">theta0</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">t2</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">p</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">dv</span>
     <span class="k">return</span> <span class="n">negll</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span> <span class="o">-</span> <span class="n">negll_ruro</span>
 
@@ -13607,7 +13893,7 @@ saved v5_partial (drgn1 live; pexp scaling pending agent report)
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Certified pexp_years for a fresh 2016 singles sample.</span>
 <span class="c1"># Faithful to enh_RURO_prep.py::_add_ruro_variables_basic (priority liwwh-&gt;dew-&gt;dey,</span>
 <span class="c1"># age cap dag-15) + harmonise_bpool_engine_ready.py rescale (/20). Ref: med~1.05, max 2.45.</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="n">_d</span>   <span class="o">=</span> <span class="n">singles_dec</span>
 <span class="n">dag</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">_d</span><span class="p">[</span><span class="s1">'dag'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
@@ -13681,8 +13967,8 @@ max           44.0000      2.2000       4.8400
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── v5-final. pexp source audit → merge onto engine-ready → full re-probe ───</span>
 <span class="c1"># (run AFTER the agent's pexp cell that adds singles_dec['pexp_years'/'pexp_years2'])</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.likelihood.index</span> <span class="kn">import</span> <span class="n">compute_index</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.data.loader</span> <span class="kn">import</span> <span class="n">load_singles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.likelihood.index</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_index</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.data.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_singles</span>
 
 <span class="c1"># certified priority is liwwh -&gt; dew/dey; audit which fired</span>
 <span class="n">src</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">singles_dec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'liwwh'</span><span class="p">),</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s1">'liwwh'</span><span class="p">,</span>
@@ -13708,7 +13994,7 @@ max           44.0000      2.2000       4.8400
 <span class="n">data_sm</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">sm_df</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">metadata</span><span class="o">=</span><span class="n">norm_meta</span><span class="p">)</span>
 <span class="n">data_sf</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">sf_df</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">norm_meta</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">negll</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">negll</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="c1"># backend='numpy': JAX joint builder does not skip a None couples group</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">compute_index</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="p">(</span><span class="n">data_sm</span><span class="p">,</span> <span class="n">data_sf</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">t</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="n">ruro</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">))</span>
 
@@ -13717,7 +14003,7 @@ max           44.0000      2.2000       4.8400
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">negLL ruro=True : </span><span class="si">{</span><span class="n">negll_ruro</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">   &lt;- trial baseline v5'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'negLL ruro=False: </span><span class="si">{</span><span class="n">negll_rum</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">probe</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">probe</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dv</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">t2</span> <span class="o">=</span> <span class="n">theta0</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">t2</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">p</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">dv</span>
@@ -13730,7 +14016,7 @@ max           44.0000      2.2000       4.8400
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'live </span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s1">15s</span><span class="si">}</span><span class="s1"> '</span> <span class="o">+</span> <span class="p">(</span><span class="s1">'NOT IN spec'</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">'ΔnegLL=</span><span class="si">{</span><span class="n">d</span><span class="si">:</span><span class="s1"> .4f</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="s2">"OK"</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">1e-6</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">"DEAD"</span><span class="si">}</span><span class="s1">'</span><span class="p">))</span>
 
 <span class="c1"># tail check: per-household negLL must have collapsed from the ~45k blow-up to ordinary</span>
-<span class="k">def</span> <span class="nf">hh_negll</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">male</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hh_negll</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">male</span><span class="p">):</span>
     <span class="n">one</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="n">frame</span><span class="p">[</span><span class="s1">'idhh'</span><span class="p">]</span> <span class="o">==</span> <span class="n">hh</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">d1</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">one</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="n">male</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">norm_meta</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="n">male</span> <span class="k">else</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -13782,9 +14068,9 @@ per-household negLL (10+10): {'count': 20.0, 'mean': 3.19, 'std': 2.39, 'min': 0
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 20. THE FIT — singles trial, JAX gradient, L-BFGS-B from certified warm start ──</span>
-<span class="kn">import</span> <span class="nn">jax</span><span class="o">,</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.likelihood.engine_jax</span> <span class="kn">import</span> <span class="n">build_jax_singles_ll</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span><span class="o">,</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.likelihood.engine_jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_jax_singles_ll</span>
 
 <span class="n">nll_m</span><span class="p">,</span> <span class="n">pidx_m</span> <span class="o">=</span> <span class="n">build_jax_singles_ll</span><span class="p">(</span><span class="n">data_sm</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">nll_f</span><span class="p">,</span> <span class="n">pidx_f</span> <span class="o">=</span> <span class="n">build_jax_singles_ll</span><span class="p">(</span><span class="n">data_sf</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -13806,7 +14092,7 @@ per-household negLL (10+10): {'count': 20.0, 'mean': 3.19, 'std': 2.39, 'min': 0
 <span class="nb">print</span><span class="p">(</span><span class="s1">'bounds:'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bounds</span><span class="p">),</span> <span class="s1">'| warm start inside bounds:'</span><span class="p">,</span>
       <span class="nb">all</span><span class="p">(</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t0</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">hi</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bounds</span><span class="p">)))</span>
 
-<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
     <span class="n">v</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">val_grad</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'float64'</span><span class="p">)</span>
 
@@ -14040,10 +14326,10 @@ largest parameter drift in polish: [('beta_l0_sf', 0.0035), ('beta_l_age_sm', 0.
 <div class="jp-InputPrompt jp-InputArea-prompt">In [47]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="c1"># --- trial artifacts (repo root = notebook cwd) ---</span>
 <span class="n">CSV</span>  <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'theta_trial_singles_2016_v2_occpinned.csv'</span><span class="p">)</span>
@@ -14256,7 +14542,7 @@ at bounds now: [('beta_l_age2_sm', np.float64(3.0)), ('beta_l_age2_sf', np.float
         <span class="s1">'at_bound'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'beta_l_age2_sm'</span><span class="p">,</span> <span class="s1">'beta_l_age2_sf'</span><span class="p">],</span>
         <span class="s1">'age2_bound_decision'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'kept certified 1.0: widening to 3.0 ran both params to the '</span>
                                 <span class="s1">'new bound for a 2.28-nat gain -&gt; near-flat direction, bound retained'</span><span class="p">)}</span>
-<span class="kn">import</span> <span class="nn">json</span><span class="p">;</span> <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">prov</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'trial_fit_provenance.json'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="p">;</span> <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">prov</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'trial_fit_provenance.json'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'frozen: negLL'</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">res3</span><span class="o">.</span><span class="n">fun</span><span class="p">),</span> <span class="mi">6</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -14290,9 +14576,9 @@ at bounds now: [('beta_l_age2_sm', np.float64(3.0)), ('beta_l_age2_sf', np.float
 <span class="c1"># provenance so it can never drift from the frozen fit (cell 22). Mirrors the</span>
 <span class="c1"># certified schema realdata_joint_901_tlmpin_certified: the 16 pinned params sit</span>
 <span class="c1"># in 'parameters' but are excluded from standard_errors/initial_values/theta.</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 
 <span class="n">prov</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">'trial_fit_provenance.json'</span><span class="p">))</span>
 <span class="n">CSV_ADAPT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">prov</span><span class="p">[</span><span class="s1">'theta_csv'</span><span class="p">])</span>                 <span class="c1"># keyed off provenance, not hardcoded</span>
@@ -14402,9 +14688,9 @@ at bounds now: [('beta_l_age2_sm', np.float64(3.0)), ('beta_l_age2_sf', np.float
 <span class="c1"># Runs RURO_post_estimation_styled.py into the trial folder, then displays the</span>
 <span class="c1"># LLM summary + every diagnostic image right here. The *_llm_summary_*.md stays</span>
 <span class="c1"># in outputs/trial_singles2016/; the HTML is discarded (we read it inline).</span>
-<span class="kn">import</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">glob</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">display</span>
 
 <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="p">]</span>
 <span class="n">MNL_ROOT</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="s1">'scripts/enhanced/RURO_post_estimation_styled.py'</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
@@ -14457,7 +14743,7 @@ at bounds now: [('beta_l_age2_sm', np.float64(3.0)), ('beta_l_age2_sf', np.float
 <span class="c1"># 2) diagnostic images inline, deduped + sorted. Singles trial -&gt; DROP the couples</span>
 <span class="c1"># plots (cou_m/cou_f *_mu, *_contours): they are driven only by the pinned couples</span>
 <span class="c1"># params, have no couples microdata behind them, and are pure redundancy here.</span>
-<span class="k">def</span> <span class="nf">_is_couples</span><span class="p">(</span><span class="n">stem</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_couples</span><span class="p">(</span><span class="n">stem</span><span class="p">):</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">stem</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">PREFIX</span><span class="p">):]</span>
     <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'cou_'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'couples'</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">'_couples'</span> <span class="ow">in</span> <span class="n">s</span>
 <span class="n">allpng</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">p</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">OUTDIR</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">PREFIX</span><span class="si">}</span><span class="s1">*.png'</span><span class="p">)},</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -18124,7 +18410,7 @@ are reported for loc4-style variables when available.</p>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── A. Provenance check → adapter re-run guard ──────────────────────────────</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="n">prov</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">'trial_fit_provenance.json'</span><span class="p">))</span>
 <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">prov</span><span class="p">[</span><span class="s1">'negll_fit'</span><span class="p">]</span> <span class="o">-</span> <span class="mf">4106.604220</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"stale provenance: </span><span class="si">{</span><span class="n">prov</span><span class="p">[</span><span class="s1">'negll_fit'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'provenance OK:'</span><span class="p">,</span> <span class="n">prov</span><span class="p">[</span><span class="s1">'negll_fit'</span><span class="p">],</span> <span class="s1">'| csv:'</span><span class="p">,</span> <span class="n">prov</span><span class="p">[</span><span class="s1">'theta_csv'</span><span class="p">])</span>
@@ -18161,8 +18447,8 @@ results JSON consistent: -4106.604220022093
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 23. Cluster-robust SEs on the identified block ──────────────────────────</span>
-<span class="kn">import</span> <span class="nn">jax</span><span class="o">,</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-<span class="kn">from</span> <span class="nn">dclaborsupply.likelihood.engine_jax</span> <span class="kn">import</span> <span class="n">build_jax_singles_ll</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span><span class="o">,</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.likelihood.engine_jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_jax_singles_ll</span>
 
 <span class="n">ll_m</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">build_jax_singles_ll</span><span class="p">(</span><span class="n">data_sm</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">per_group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">ll_f</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">build_jax_singles_ll</span><span class="p">(</span><span class="n">data_sf</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">per_group</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -18360,7 +18646,99 @@ wrote occ_wage_separation_diagnostic.md — read eta2, apply the rule, fill DECI
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=abe055e9">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=abe055e9">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [57]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 26. Fill the pre-committed verdict + patch the master record ────────────</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'outputs/trial_singles2016/occ_wage_separation_diagnostic.md'</span><span class="p">)</span>
+<span class="n">txt</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+    <span class="s1">'DECISION: &lt;fill after reading eta2, per pre-committed rule&gt;'</span><span class="p">,</span>
+    <span class="s1">'DECISION: SEPARATED (eta^2 F=0.213, M=0.128; both &gt;= the 0.10-0.15 threshold) -&gt; '</span>
+    <span class="s1">'occupation-conditional wage draws ADOPTED for the next rebuild (P2), per the '</span>
+    <span class="s1">'pre-committed rule in JMP_conditional_wage_on_occupation_decision_note_v1. '</span>
+    <span class="s1">'Accepted-wage selection caveat flagged per note §4.'</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">txt</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="s1">'verdict filled'</span><span class="p">)</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'outputs/trial_singles2016/TRIAL_MASTER_RECORD.md'</span><span class="p">)</span>
+<span class="n">rec</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'report HTML'</span><span class="p">,</span> <span class="s1">'inline report (HTML discarded by design)'</span><span class="p">)</span>
+<span class="n">rec</span> <span class="o">+=</span> <span class="s2">"""</span>
+<span class="s2">## Post-closure addenda</span>
+<span class="s2">- Box-24 verdict: SEPARATED (eta^2 F=0.213, M=0.128) -&gt; occupation-conditional wage draws adopted for P2.</span>
+<span class="s2">- SE gates: T1 3.1e-13; H_free min eig 0.1246 (PD on identified block); T5 ratio med 1.115 / max 2.887.</span>
+<span class="s2">- Interpretive notes: theta_c_singles weakly identified (t=-1.11, robust/Hessian ratio 2.89;</span>
+<span class="s2">  indistinguishable from log utility -- pooling expected to tighten). beta_E_drgur/drgmd</span>
+<span class="s2">  collapsed to ~0 from certified -0.53/-0.67: urbanization opportunity effect not found in</span>
+<span class="s2">  singles-2016 alone (gsur strongly present instead, t=-4.15). Both are P2 hypotheses.</span>
+<span class="s2">"""</span>
+<span class="n">m</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">rec</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="s1">'master record patched'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>verdict filled
+master record patched
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=09fb27c1">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [58]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ── 27. REGRESSION ANCHOR — notebook self-verification (cold reload) ────────</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.data.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_singles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dclaborsupply.likelihood.index</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_index</span>
+
+<span class="n">_prov</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">'trial_fit_provenance.json'</span><span class="p">))</span>
+<span class="n">_tab</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">_prov</span><span class="p">[</span><span class="s1">'theta_csv'</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'param'</span><span class="p">)[</span><span class="s1">'trial'</span><span class="p">]</span>
+<span class="n">_er</span>   <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">_prov</span><span class="p">[</span><span class="s1">'engine_ready'</span><span class="p">])</span>
+<span class="n">_meta</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'normalization'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'singles'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'c_scale'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">_er</span><span class="p">[</span><span class="s1">'c_scale'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                                       <span class="s1">'l_scale'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">_er</span><span class="p">[</span><span class="s1">'l_scale'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])}}}</span>
+<span class="n">_dm</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">_er</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">_er</span><span class="p">[</span><span class="s1">'dgn'</span><span class="p">])</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">metadata</span><span class="o">=</span><span class="n">_meta</span><span class="p">)</span>
+<span class="n">_df</span> <span class="o">=</span> <span class="n">load_singles</span><span class="p">(</span><span class="n">_er</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">_er</span><span class="p">[</span><span class="s1">'dgn'</span><span class="p">])</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">spec</span><span class="p">,</span> <span class="n">is_male</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">_meta</span><span class="p">)</span>
+<span class="n">_th</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">_tab</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">all_param_names</span><span class="p">])</span>
+<span class="n">_nll</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">compute_index</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="p">(</span><span class="n">_dm</span><span class="p">,</span> <span class="n">_df</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">_th</span><span class="p">,</span> <span class="n">ruro</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'anchor negLL = </span><span class="si">{</span><span class="n">_nll</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">  (target 4106.604220)'</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">_nll</span> <span class="o">-</span> <span class="mf">4106.604220</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="s1">'TRIAL ANCHOR BROKEN — environment/package/data changed'</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'TRIAL ANCHOR HOLDS — notebook self-verified.'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>anchor negLL = 4106.604220  (target 4106.604220)
+TRIAL ANCHOR HOLDS — notebook self-verified.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=108bb1ce">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
